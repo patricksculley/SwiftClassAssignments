@@ -35,5 +35,8 @@ class BinLocModel: NSObject {
     func setName (){
         names = (modelType == .BinType) ? bins : locations
     }
+    func getIndexOfValue(val : String!)-> Int{
     
+      return  names.index(of: val)!
+    }
 }

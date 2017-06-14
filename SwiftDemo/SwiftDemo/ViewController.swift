@@ -30,7 +30,6 @@ class ViewController: UIViewController,EntityProtocol {
     @IBAction func save(_ sender: UIButton) {
         
         self.name =  self.binText.text!
-        self.performSegue(withIdentifier: "backToBin", sender: self)
     }
     
     override func unwind(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
@@ -41,16 +40,18 @@ class ViewController: UIViewController,EntityProtocol {
     }
     
     func setTitle(name : String){
+       
         switch ((self.binLocModel)!.modelType){
-        case ValueType.BinType : self.binText.text = name
-        case  ValueType.LocationType: self.locationText.text = name
-        
+            case ValueType.BinType : self.binText.text = name
+            case  ValueType.LocationType: self.locationText.text = name
         }
     }
     
     @IBAction func unwindToMenu(segue: UIStoryboardSegue) {
-         let vc = segue.source as! NewValueViewController
-         self.binLocModel?.addElement(name: vc.name)
+        let vc = segue.source as! NewValueViewController
+        self.setTitle(name: vc.name!)
+        self.binLocModel?.addElement(name: vc.name)
+        self.binLocModel?.setName()
     }
     
     @IBAction func changeSegue(sender: UIButton){
@@ -75,8 +76,13 @@ extension ViewController : UIPickerViewDelegate , UIPickerViewDataSource{
         return self.binLocModel?.names[row]
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            self.setTitle(name: (self.binLocModel?.names[row])!)
-            self.pickerView.isHidden = true
+
+        if self.binLocModel?.names.count == 0{
+            return
+        }
+        
+        self.setTitle(name: (self.binLocModel?.names[row])!)
+        self.pickerView.isHidden = true
     }
     
 }
@@ -88,12 +94,33 @@ extension ViewController : UITextFieldDelegate{
         
         switch (textField){
         
-        case binText : self.binLocModel?.modelType = .BinType;self.binLocModel?.setName(); self.pickerView.isHidden = false; self.pickerView.reloadAllComponents() ;  ret = false ;
+        case binText :
+            self.binLocModel?.modelType = .BinType;
+            self.binLocModel?.setName();
+            self.pickerView.isHidden = false;
+            self.pickerView.reloadAllComponents() ;
+            if (binText.text?.characters.count)! > 0 {
+                self.pickerView.selectRow((self.binLocModel?.getIndexOfValue(val: self.binText.text!))!, inComponent: 0, animated: true)
+            }
+            ret = false ;
+            
         
-        case locationText : self.binLocModel?.modelType = .LocationType; self.binLocModel?.setName();self.pickerView.isHidden = false; self.pickerView.reloadAllComponents(); ret = false
+        case locationText :
+            self.binLocModel?.modelType = .LocationType;
+            self.binLocModel?.setName();
+            self.pickerView.isHidden = false;
+            self.pickerView.reloadAllComponents();
+            if (locationText.text?.characters.count)! > 0 {
+                self.pickerView.selectRow((self.binLocModel?.getIndexOfValue(val: self.locationText.text!))!, inComponent: 0, animated: true)
+            }
+
+            ret = false
+      
         default : break
         }
         
         return ret
     }
+    
+    
 }
