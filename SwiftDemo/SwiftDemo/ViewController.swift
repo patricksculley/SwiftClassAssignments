@@ -40,10 +40,10 @@ class ViewController: UIViewController,EntityProtocol {
     }
     
     func setTitle(name : String){
-        switch (self.binLocModel?.modelType){
-        case BinType : self.binText.text = name
-        case  LocationType: self.locationText.text = name
-        default : break 
+        switch ((self.binLocModel)!.modelType){
+        case ValueType.BinType : self.binText.text = name
+        case  ValueType.LocationType: self.locationText.text = name
+        
         }
     }
     
