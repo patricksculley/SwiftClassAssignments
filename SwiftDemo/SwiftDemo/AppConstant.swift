@@ -10,8 +10,9 @@ import UIKit
 
 class AppConstant: NSObject {
     
-    
-    static let backToBinControllerSegue = "BackToBin"
+    //MARK: - Storyboard Identifiers
+    static let backToBinControllerSegueIdentifier = "BackToBin"
+    static let NewValueSegueIdentifier = "NewValueSegue"
 
 
 }

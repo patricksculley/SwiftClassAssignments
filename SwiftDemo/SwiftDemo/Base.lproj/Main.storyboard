@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="xDo-Ps-AfJ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="xDo-Ps-AfJ">
     <device id="retina3_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -74,31 +74,31 @@
                                     <action selector="save:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sbM-UZ-MvF"/>
                                 </connections>
                             </button>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ebj-kJ-3rm">
+                            <pickerView hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ebj-kJ-3rm">
                                 <rect key="frame" x="8" y="204" width="304" height="256"/>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="yff-Kg-D2l"/>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="3bU-Dg-LsX"/>
                                 </connections>
                             </pickerView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g1K-2D-Bvh">
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g1K-2D-Bvh">
                                 <rect key="frame" x="290" y="78" width="22" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="0Qn-wT-6eo"/>
                                     <constraint firstAttribute="width" constant="22" id="RdW-kC-iDu"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="Pyi-wB-y2s" kind="presentation" id="rkR-yg-7pt"/>
+                                    <action selector="changeSegueWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="C9Z-fv-qm3"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kYh-XK-WAf">
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kYh-XK-WAf">
                                 <rect key="frame" x="290" y="118" width="22" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="XA4-KC-csw"/>
                                     <constraint firstAttribute="width" constant="22" id="kIT-1Y-Ycx"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="Pyi-wB-y2s" kind="presentation" id="Sin-YE-kvo"/>
+                                    <action selector="changeSegueWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mW5-sD-mEY"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -128,16 +128,17 @@
                         <outlet property="binText" destination="lFE-5x-4o9" id="yV8-Nf-NGx"/>
                         <outlet property="locationText" destination="yxP-WX-wGh" id="mjo-79-f8s"/>
                         <outlet property="pickerView" destination="Ebj-kJ-3rm" id="Q1g-6d-MgN"/>
+                        <segue destination="Pyi-wB-y2s" kind="presentation" identifier="NewValueSegue" id="lQ5-xC-nlu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="135" y="138.75"/>
         </scene>
-        <!--New Bin View Controller-->
+        <!--New Value View Controller-->
         <scene sceneID="bdW-mh-r6d">
             <objects>
-                <viewController id="Pyi-wB-y2s" customClass="NewBinViewController" customModule="SwiftDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Pyi-wB-y2s" customClass="NewValueViewController" customModule="SwiftDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="tVq-nZ-Ada"/>
                         <viewControllerLayoutGuide type="bottom" id="lJ8-dV-79Q"/>
@@ -145,19 +146,40 @@
                     <view key="view" contentMode="scaleToFill" id="4Mj-Em-0QO">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kl0-0w-oW8">
+                                <rect key="frame" x="8" y="225" width="304" height="30"/>
+                                <state key="normal" title="Save"/>
+                                <connections>
+                                    <action selector="saveWithSender:" destination="Pyi-wB-y2s" eventType="touchUpInside" id="Seb-sz-3tr"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cbH-rT-5cT">
+                                <rect key="frame" x="8" y="187" width="304" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Kl0-0w-oW8" firstAttribute="top" secondItem="cbH-rT-5cT" secondAttribute="bottom" constant="8" id="HyM-iU-Er3"/>
+                            <constraint firstItem="Kl0-0w-oW8" firstAttribute="leading" secondItem="4Mj-Em-0QO" secondAttribute="leading" constant="8" id="K8t-Ew-RrP"/>
+                            <constraint firstAttribute="trailing" secondItem="Kl0-0w-oW8" secondAttribute="trailing" constant="8" id="XFH-NR-Wb5"/>
+                            <constraint firstItem="Kl0-0w-oW8" firstAttribute="centerY" secondItem="4Mj-Em-0QO" secondAttribute="centerY" id="Z33-5G-kae"/>
+                            <constraint firstItem="cbH-rT-5cT" firstAttribute="leading" secondItem="4Mj-Em-0QO" secondAttribute="leading" constant="8" id="icr-jl-djE"/>
+                            <constraint firstAttribute="trailing" secondItem="cbH-rT-5cT" secondAttribute="trailing" constant="8" id="rIK-v2-bf9"/>
+                        </constraints>
                     </view>
                     <connections>
-                        <segue destination="xb1-o5-BIp" kind="unwind" identifier="BackToBinView" unwindAction="unwindToMenuWithSegue:" id="XO4-Z1-bRM"/>
+                        <outlet property="nameText" destination="cbH-rT-5cT" id="Yj0-0z-nnp"/>
+                        <segue destination="xb1-o5-BIp" kind="unwind" identifier="BackToBin" unwindAction="unwindToMenuWithSegue:" id="XO4-Z1-bRM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fQv-y5-IkM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="xb1-o5-BIp" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="924" y="139"/>
+            <point key="canvasLocation" x="922.5" y="138.75"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="rkR-yg-7pt"/>
-    </inferredMetricsTieBreakers>
 </document>

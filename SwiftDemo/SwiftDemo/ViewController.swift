@@ -13,10 +13,11 @@ class ViewController: UIViewController,EntityProtocol {
     @IBOutlet weak var locationText: UITextField!
     @IBOutlet weak var binText: UITextField!
     @IBOutlet weak var pickerView: UIPickerView!
-    weak var binLocModel : BinLocModel? = BinLocModel()
+     var binLocModel : BinLocModel?
   
     override func viewDidLoad() {
         super.viewDidLoad()
+        binLocModel = BinLocModel()
         self.title = "Bin View"
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -35,7 +36,7 @@ class ViewController: UIViewController,EntityProtocol {
     override func unwind(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
         
         
-         (subsequentVC as! NewBinViewController).printName()
+         (subsequentVC as! NewValueViewController).printName()
         
     }
     
@@ -48,8 +49,15 @@ class ViewController: UIViewController,EntityProtocol {
     }
     
     @IBAction func unwindToMenu(segue: UIStoryboardSegue) {
-         let vc = segue.source as! NewBinViewController
+         let vc = segue.source as! NewValueViewController
          self.binLocModel?.addElement(name: vc.name)
+    }
+    
+    @IBAction func changeSegue(sender: UIButton){
+        self.pickerView.isHidden = true
+        self.binLocModel?.modelType = (sender.tag == 1) ? .BinType : .LocationType
+        self.performSegue(withIdentifier:AppConstant.NewValueSegueIdentifier , sender: self)
+    
     }
 
 }
@@ -79,8 +87,10 @@ extension ViewController : UITextFieldDelegate{
         var ret : Bool = true
         
         switch (textField){
-        case binText : self.binLocModel?.modelType = .BinType; ret = false
-        case locationText : self.binLocModel?.modelType = .LocationType; ret = false
+        
+        case binText : self.binLocModel?.modelType = .BinType;self.binLocModel?.setName(); self.pickerView.isHidden = false; self.pickerView.reloadAllComponents() ;  ret = false ;
+        
+        case locationText : self.binLocModel?.modelType = .LocationType; self.binLocModel?.setName();self.pickerView.isHidden = false; self.pickerView.reloadAllComponents(); ret = false
         default : break
         }
         

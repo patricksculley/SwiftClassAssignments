@@ -17,9 +17,9 @@ enum ValueType  {
 class BinLocModel: NSObject {
    
    
-    var names : [String]! = []
-    var bins : [String]! = []
-    var locations : [String]! = []
+    var names : [String]! = [String]()
+    var bins : [String]! = [String]()
+    var locations : [String]! = [String]()
     var modelType : ValueType = .BinType
     
     func addElement(name : String? ){

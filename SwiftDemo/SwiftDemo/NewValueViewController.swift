@@ -8,8 +8,11 @@
 
 import UIKit
 
-class NewBinViewController: UIViewController,EntityProtocol {
+class NewValueViewController: UIViewController,EntityProtocol {
+    
     var name : String?
+    @IBOutlet weak var nameText : UITextField?
+    var modelType: ValueType!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +25,15 @@ class NewBinViewController: UIViewController,EntityProtocol {
         // Dispose of any resources that can be recreated.
     }
     
-
+    @IBAction func save(sender : UIButton){
+        self.name = nameText?.text
+        self.performSegue(withIdentifier: AppConstant.backToBinControllerSegueIdentifier, sender: self)
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print ("I'm here")
+    }
     /*
     // MARK: - Navigation
 
