@@ -18,8 +18,9 @@ class SearchViewController: UITableViewController {
         super.viewDidLoad()
         
         let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchBar.delegate = self
+        
         searchController.searchBar.scopeButtonTitles = ["ItemType", "BinType", "LocationType"]
+        searchController.searchBar.delegate = self
         searchController.searchBar.showsScopeBar = true
 
         searchController.searchResultsUpdater = self
@@ -101,11 +102,15 @@ extension SearchViewController : UISearchResultsUpdating{
     
     }
     
+    
+    
 }
 extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        
         filterContentForSearchText(searchText: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
     }
+    
 }
 
 
