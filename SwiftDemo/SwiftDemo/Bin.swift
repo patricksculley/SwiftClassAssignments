@@ -11,7 +11,7 @@ import UIKit
 class Bin: NSObject,EntityProtocol {
     var name: String?
     var entityType: EntityType {return .BinType}
-    weak var location : Location?
+     var location : Location?
     
     init(binName : String?, location : Location?){
         super.init()

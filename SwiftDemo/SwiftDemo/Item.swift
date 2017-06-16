@@ -12,7 +12,7 @@ class Item: EntityProtocol {
     
     var name: String?
     var entityType: EntityType {return .ItemType}
-    weak var bin : Bin?
+     var bin : Bin?
     
     init(itemnName : String?, bin : Bin?){
         self.name = itemnName

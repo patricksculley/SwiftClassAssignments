@@ -13,7 +13,6 @@ class SearchViewController: UITableViewController {
     var items : [Item]? = [Item]()
     var filteredArray : [EntityProtocol] = [EntityProtocol]()
     var selectedItem : Item?
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,11 +29,17 @@ class SearchViewController: UITableViewController {
         
 
     }
+    override func viewWillAppear(_ animated: Bool) {
+        self.filteredArray = self.items! as [EntityProtocol]
+        self.tableView.reloadData()
+    }
 
   
 
     // MARK: - Table view data source
-
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80;
+    }
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -46,7 +51,7 @@ class SearchViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: AppConstant.searchViewControllerSegueIdentifier)
+        let cell = tableView.dequeueReusableCell(withIdentifier: AppConstant.searchViewControllerCellIdentifier)
         
         switch (filteredArray[indexPath.row].entityType){
         
@@ -68,7 +73,7 @@ class SearchViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedItem = filteredArray[indexPath.row] as! Item
+        selectedItem = filteredArray[indexPath.row] as? Item
         self.performSegue(withIdentifier: AppConstant.backToBinControllerSegueIdentifier, sender: self)
     }
     

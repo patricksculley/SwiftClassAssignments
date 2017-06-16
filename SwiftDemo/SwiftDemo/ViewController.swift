@@ -40,8 +40,6 @@ class ViewController: UIViewController,ViewControllerProtocol {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as! SearchViewController
         vc.items = self.binLocModel?.items
-        vc.filteredArray = vc.items!
-        vc.tableView.reloadData()
     }
     
     func setTitle(name : String){
@@ -54,10 +52,12 @@ class ViewController: UIViewController,ViewControllerProtocol {
     }
     
     @IBAction func unwindToMenu(segue: UIStoryboardSegue) {
-        let vc = segue.source as! NewValueViewController
-        self.setTitle(name: vc.name!)
-        self.binLocModel?.addElement(name: vc.name)
-        self.binLocModel?.setName()
+        let vc = segue.source as! SearchViewController
+        self.itemText.text = vc.selectedItem?.name
+        self.binText.text = vc.selectedItem?.bin?.name
+        self.locationText.text = vc.selectedItem?.bin?.location?.name
+        
+        
     }
     
     @IBAction func changeSegue(sender: UIButton){
