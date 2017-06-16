@@ -110,6 +110,10 @@ extension SearchViewController: UISearchBarDelegate {
         
         filterContentForSearchText(searchText: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
     }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+          filterContentForSearchText(searchText: searchText, scope: searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex])
+        
+    }
     
 }
 
