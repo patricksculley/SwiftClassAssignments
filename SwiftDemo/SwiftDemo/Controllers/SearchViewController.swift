@@ -21,6 +21,7 @@ class SearchViewController: UITableViewController {
         
         searchController.searchBar.scopeButtonTitles = ["ItemType", "BinType", "LocationType"]
         searchController.searchBar.delegate = self
+ 
         searchController.searchBar.showsScopeBar = true
 
         searchController.searchResultsUpdater = self
