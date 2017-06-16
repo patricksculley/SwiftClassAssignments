@@ -13,13 +13,15 @@ class SearchViewController: UITableViewController {
     var items : [Item]? = [Item]()
     var filteredArray : [EntityProtocol] = [EntityProtocol]()
     var selectedItem : Item?
+    let searchController = UISearchController(searchResultsController: nil)
+    let scoopButtonTitles = ["ItemType","BinType","LocationType"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let searchController = UISearchController(searchResultsController: nil)
         
-        searchController.searchBar.scopeButtonTitles = ["ItemType", "BinType", "LocationType"]
+        
+        searchController.searchBar.scopeButtonTitles = scoopButtonTitles
         searchController.searchBar.delegate = self
  
         searchController.searchBar.showsScopeBar = true

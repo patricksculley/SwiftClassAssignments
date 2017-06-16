@@ -263,7 +263,6 @@
                             <outlet property="delegate" destination="SO9-6G-XAz" id="W4M-x6-wKP"/>
                         </connections>
                     </tableView>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="tableView" destination="D3W-nD-Kfj" id="4Tj-ve-FBS"/>
                         <segue destination="jKx-OL-X8R" kind="unwind" identifier="BackToBin" unwindAction="unwindToMenuWithSegue:" id="AZd-3F-n51"/>
