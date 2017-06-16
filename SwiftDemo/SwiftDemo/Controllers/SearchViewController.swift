@@ -20,6 +20,7 @@ class SearchViewController: UITableViewController {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.delegate = self
         searchController.searchBar.scopeButtonTitles = ["ItemType", "BinType", "LocationType"]
+        searchController.searchBar.showsScopeBar = true
 
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
