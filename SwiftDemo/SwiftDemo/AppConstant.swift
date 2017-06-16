@@ -13,6 +13,10 @@ class AppConstant: NSObject {
     //MARK: - Storyboard Identifiers
     static let backToBinControllerSegueIdentifier = "BackToBin"
     static let NewValueSegueIdentifier = "NewValueSegue"
-
-
+    static let searchViewControllerSegueIdentifier = "SearchViewControllerSegue"
+    
+    
+    //MARK: - Cell Identifiers
+    
+    static let searchViewControllerCellIdentifier = "SearchItemCell"
 }

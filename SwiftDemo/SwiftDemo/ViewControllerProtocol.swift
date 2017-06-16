@@ -1,24 +1,24 @@
 //
-//  Entity.swift
+//  ViewControllerProtocol.swift
 //  SwiftDemo
 //
-//  Created by Khurram Iqbal on 14/06/2017.
+//  Created by khurram iqbal on 15/06/2017.
 //  Copyright © 2017 Nisum. All rights reserved.
 //
 
 import UIKit
 
-protocol EntityProtocol : class{
-    
+protocol ViewControllerProtocol: class {
     var name : String? {get set}
-    
     func printName()
-
+    
 }
 
-extension EntityProtocol {
-
+extension ViewControllerProtocol {
+    
     func printName(){
         print (self.name ?? "Nil Value")
+        
     }
+    
 }

@@ -8,10 +8,11 @@
 
 import UIKit
 
-class ViewController: UIViewController,EntityProtocol {
+class ViewController: UIViewController,ViewControllerProtocol {
     var name : String?
     @IBOutlet weak var locationText: UITextField!
     @IBOutlet weak var binText: UITextField!
+    @IBOutlet weak var itemText: UITextField!
     @IBOutlet weak var pickerView: UIPickerView!
      var binLocModel : BinLocModel?
   
@@ -29,21 +30,26 @@ class ViewController: UIViewController,EntityProtocol {
 
     @IBAction func save(_ sender: UIButton) {
         
-        self.name =  self.binText.text!
+        if itemText.text?.characters.count != 0{
+        let item = Item(itemnName: itemText.text, bin: Bin(binName: binText.text, location: Location(locationName: locationText.text)))
+        self.binLocModel?.items.append(item)
+        }
+    
     }
     
-    override func unwind(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
-        
-        
-         (subsequentVC as! NewValueViewController).printName()
-        
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as! SearchViewController
+        vc.items = self.binLocModel?.items
+        vc.filteredArray = vc.items!
+        vc.tableView.reloadData()
     }
     
     func setTitle(name : String){
        
         switch ((self.binLocModel)!.modelType){
-            case ValueType.BinType : self.binText.text = name
-            case  ValueType.LocationType: self.locationText.text = name
+            case EntityType.BinType : self.binText.text = name
+            case  EntityType.LocationType: self.locationText.text = name
+            default : break
         }
     }
     
@@ -57,7 +63,58 @@ class ViewController: UIViewController,EntityProtocol {
     @IBAction func changeSegue(sender: UIButton){
         self.pickerView.isHidden = true
         self.binLocModel?.modelType = (sender.tag == 1) ? .BinType : .LocationType
-        self.performSegue(withIdentifier:AppConstant.NewValueSegueIdentifier , sender: self)
+        self.showAlertController(entityType: (self.binLocModel?.modelType)!)
+    
+    }
+    @IBAction func searchBtnClick(sender : UIButton){
+    
+        self.performSegue(withIdentifier:AppConstant.searchViewControllerSegueIdentifier , sender: self)
+
+    }
+    
+    func showAlertController(entityType : EntityType){
+        
+        weak var weakSelf = self
+    
+        let alertController = UIAlertController(title: "\(entityType)", message: "Please Add \(entityType)", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel,handler: { (action) -> Void in
+            alertController.dismiss(animated: true, completion: nil)
+        })
+        
+        
+        
+        let saveAction = UIAlertAction(title: "Save", style: .default, handler: { ( action) -> Void in
+            
+            if  alertController.textFields?.first?.text?.characters.count == 0 {
+               weakSelf?.showErrorAlert(title: "Empty Value", message: "\(entityType) cannot be empty ")
+                return;
+            }
+            else if alertController.textFields?.first?.text?.characters.count != 0{
+                weakSelf?.binLocModel?.addElement(name: alertController.textFields?.first?.text!)
+                weakSelf?.binLocModel?.setName()
+                weakSelf?.setTitle(name: (alertController.textFields?.first?.text)!)
+                alertController.dismiss(animated: true, completion: nil)
+            }
+            
+        })
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "\(entityType)"
+        }
+        
+        self.present(alertController, animated: true, completion: nil)
+    
+        
+    
+    }
+    
+    func showErrorAlert (title : String, message : String){
+    
+         let alert = UIAlertView(title: "", message: message, delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
     
     }
 

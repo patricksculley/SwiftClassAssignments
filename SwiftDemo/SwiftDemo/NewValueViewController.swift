@@ -8,11 +8,11 @@
 
 import UIKit
 
-class NewValueViewController: UIViewController,EntityProtocol {
+class NewValueViewController: UIViewController,ViewControllerProtocol {
     
     var name : String?
     @IBOutlet weak var nameText : UITextField?
-    var modelType: ValueType!
+    var modelType: EntityType!
 
     override func viewDidLoad() {
         super.viewDidLoad()
