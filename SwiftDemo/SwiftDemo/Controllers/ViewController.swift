@@ -20,6 +20,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
         super.viewDidLoad()
         binLocModel = BinLocModel()
         self.title = "Bin View"
+        self.loadMockData()
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -41,7 +42,23 @@ class ViewController: UIViewController,ViewControllerProtocol {
         let vc = segue.destination as! SearchViewController
         vc.items = self.binLocModel?.items
     }
+    func loadMockData(){
+        
+        self.binLocModel?.modelType = .BinType
+        self.binLocModel?.addElement(name: "bin 1")
+        self.binLocModel?.addElement(name: "bin 2")
+        self.binLocModel?.addElement(name: "bin 3")
+        
+        self.binLocModel?.modelType = .LocationType
+        self.binLocModel?.addElement(name: "loc 1")
+        self.binLocModel?.addElement(name: "loc 2")
+        self.binLocModel?.addElement(name: "loc 3")
+        
+        self.binLocModel?.items.append(Item(itemnName: "item1", bin: Bin(binName: "bin1", location:Location(locationName: "loc1"))))
+        self.binLocModel?.items.append(Item(itemnName: "item2", bin: Bin(binName: "bin2", location:Location(locationName: "loc2"))))
+        self.binLocModel?.items.append(Item(itemnName: "item3", bin: Bin(binName: "bin3", location:Location(locationName: "loc3"))))
     
+    }
     func setTitle(name : String){
        
         switch ((self.binLocModel)!.modelType){

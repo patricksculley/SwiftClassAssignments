@@ -85,8 +85,8 @@ class SearchViewController: UITableViewController {
     func filterContentForSearchText(searchText: String, scope: String ) {
         filteredArray = items!.filter { item in
             
-            let objType = String(describing: item.entityType)
-            return (item.name?.lowercased().contains(searchText.lowercased()))! && objType == scope
+            let objType = String(describing: item.entityType).lowercased()
+            return (item.name?.lowercased().contains(searchText.lowercased()))! && objType == scope.lowercased()
         }
         
         tableView.reloadData()
