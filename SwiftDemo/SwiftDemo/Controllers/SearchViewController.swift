@@ -14,7 +14,7 @@ class SearchViewController: UITableViewController {
     var filteredArray : [EntityProtocol] = [EntityProtocol]()
     var selectedItem : Item?
     let searchController = UISearchController(searchResultsController: nil)
-    let scoopButtonTitles = ["ItemType","BinType","LocationType"]
+    let scoopButtonTitles = ["All","ItemType","BinType","LocationType"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +22,7 @@ class SearchViewController: UITableViewController {
         searchController.searchBar.scopeButtonTitles = scoopButtonTitles
         searchController.searchBar.delegate = self
  
-        searchController.searchBar.showsScopeBar = true
+//        searchController.searchBar.showsScopeBar = true
 
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
@@ -33,7 +33,7 @@ class SearchViewController: UITableViewController {
 
     }
     override func viewWillAppear(_ animated: Bool) {
-        self.filteredArray = (self.EntityObjects?.filter({ return $0.entityType == .ItemType}))!
+        self.filteredArray = self.EntityObjects!
         self.tableView.reloadData()
     }
 
@@ -73,6 +73,7 @@ class SearchViewController: UITableViewController {
             
         case .LocationType:
             cell?.textLabel?.text = "Location name : \((filteredArray[indexPath.row] as! Location).name ?? "")"
+            cell?.detailTextLabel?.text = ""
         
         }
        
@@ -87,17 +88,17 @@ class SearchViewController: UITableViewController {
     
     func filterContentForSearchText(searchText: String, scope: String ) {
         
-        let entityTypeObjects = EntityObjects?.filter({return String(describing: $0.entityType).lowercased() == scope.lowercased()})
+        let entityTypeObjects = (scope == "All") ? EntityObjects : EntityObjects?.filter({return String(describing: $0.entityType).lowercased() == scope.lowercased()})
         
         filteredArray = entityTypeObjects!.filter { item in
             if searchText.isEmpty{
                 return true
             }
             let objType = String(describing: item.entityType).lowercased()
-            if searchText.isEmpty && objType == scope.lowercased() {
+            if searchText.isEmpty && objType == scope.lowercased() || searchText.isEmpty &&   scope.lowercased() == "All" {
                 return true
             }
-            return (item.name?.lowercased().contains(searchText.lowercased()))! && objType == scope.lowercased()
+            return (item.name?.lowercased().contains(searchText.lowercased()))! && (scope == "All") ? true : objType == scope.lowercased()
         }
         
         tableView.reloadData()

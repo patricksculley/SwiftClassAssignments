@@ -59,6 +59,16 @@ class ViewController: UIViewController,ViewControllerProtocol {
         self.binLocModel?.items.append(Item(itemnName: "item2", bin: Bin(binName: "bin2", location:Location(locationName: "loc2")),qty : "1"))
         self.binLocModel?.items.append(Item(itemnName: "item3", bin: Bin(binName: "bin3", location:Location(locationName: "loc3")),qty : "1"))
         self.binLocModel?.items.append(Item(itemnName: "Mock1", bin: Bin(binName: "bin1", location:Location(locationName: "loc1")),qty : "1"))
+        
+        
+        self.binLocModel?.items.append(Bin(binName: "bin1", location:Location(locationName: "loc1")))
+        self.binLocModel?.items.append(Bin(binName: "bin2", location:Location(locationName: "loc2")))
+        self.binLocModel?.items.append(Bin(binName: "bin3", location:Location(locationName: "loc3")))
+        
+        self.binLocModel?.items.append(Location(locationName: "loc1"))
+        self.binLocModel?.items.append(Location(locationName: "loc2"))
+        self.binLocModel?.items.append(Location(locationName: "loc3"))
+        
     
     }
     func setTitle(name : String){
