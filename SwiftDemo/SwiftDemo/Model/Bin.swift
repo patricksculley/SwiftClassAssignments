@@ -8,19 +8,17 @@
 
 import UIKit
 
-class Bin: NSObject,EntityProtocol {
+class Bin: EntityProtocol {
     var name: String?
     var entityType: EntityType {return .BinType}
      var location : Location?
     
     init(binName : String?, location : Location?){
-        super.init()
         self.name = binName
         self.location = location
         
     }
-    override init() {
-        super.init()
+     init() {
     }
     
     

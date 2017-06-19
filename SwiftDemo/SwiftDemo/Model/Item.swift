@@ -6,17 +6,22 @@
 //  Copyright © 2017 Nisum. All rights reserved.
 //
 
-import UIKit
+
 
 class Item: EntityProtocol {
     
     var name: String?
     var entityType: EntityType {return .ItemType}
-     var bin : Bin?
+    var bin : Bin?
+    var qty : Int = 0
     
-    init(itemnName : String?, bin : Bin?){
+    init(itemnName : String?, bin : Bin?,qty : String?){
         self.name = itemnName
         self.bin = bin
+       
+        if !(qty?.isEmpty)!{
+            self.qty = Int(qty!)!
+        }
         
     }
      init() {

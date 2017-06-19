@@ -68,7 +68,7 @@
                                 </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="7RV-8D-plo"/>
                                 </connections>
@@ -170,6 +170,7 @@
                         <outlet property="itemText" destination="COF-iM-GFf" id="M67-iw-Fzk"/>
                         <outlet property="locationText" destination="yxP-WX-wGh" id="mjo-79-f8s"/>
                         <outlet property="pickerView" destination="Ebj-kJ-3rm" id="Q1g-6d-MgN"/>
+                        <outlet property="qtyText" destination="VAR-yq-IAZ" id="rcr-2p-i9T"/>
                         <segue destination="Pyi-wB-y2s" kind="presentation" identifier="NewValueSegue" id="lQ5-xC-nlu"/>
                         <segue destination="SO9-6G-XAz" kind="showDetail" identifier="SearchViewControllerSegue" id="r03-2U-P2O"/>
                     </connections>

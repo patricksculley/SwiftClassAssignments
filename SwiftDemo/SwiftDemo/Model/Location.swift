@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Location: NSObject,EntityProtocol {
+class Location:EntityProtocol {
     var name: String?
     var entityType: EntityType {return .LocationType}
     

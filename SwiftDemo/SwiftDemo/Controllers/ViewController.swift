@@ -13,6 +13,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
     @IBOutlet weak var locationText: UITextField!
     @IBOutlet weak var binText: UITextField!
     @IBOutlet weak var itemText: UITextField!
+    @IBOutlet weak var qtyText: UITextField!
     @IBOutlet weak var pickerView: UIPickerView!
      var binLocModel : BinLocModel?
   
@@ -32,7 +33,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
     @IBAction func save(_ sender: UIButton) {
         
         if itemText.text?.characters.count != 0{
-        let item = Item(itemnName: itemText.text, bin: Bin(binName: binText.text, location: Location(locationName: locationText.text)))
+            let item = Item(itemnName: itemText.text, bin: Bin(binName: binText.text, location: Location(locationName: locationText.text)),qty : self.qtyText.text!)
         self.binLocModel?.items.append(item)
         }
     
@@ -40,7 +41,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as! SearchViewController
-        vc.items = self.binLocModel?.items
+        vc.EntityObjects = self.binLocModel?.items
     }
     func loadMockData(){
         
@@ -54,9 +55,10 @@ class ViewController: UIViewController,ViewControllerProtocol {
         self.binLocModel?.addElement(name: "loc 2")
         self.binLocModel?.addElement(name: "loc 3")
         
-        self.binLocModel?.items.append(Item(itemnName: "item1", bin: Bin(binName: "bin1", location:Location(locationName: "loc1"))))
-        self.binLocModel?.items.append(Item(itemnName: "item2", bin: Bin(binName: "bin2", location:Location(locationName: "loc2"))))
-        self.binLocModel?.items.append(Item(itemnName: "item3", bin: Bin(binName: "bin3", location:Location(locationName: "loc3"))))
+        self.binLocModel?.items.append(Item(itemnName: "item1", bin: Bin(binName: "bin1", location:Location(locationName: "loc1")),qty : "1"))
+        self.binLocModel?.items.append(Item(itemnName: "item2", bin: Bin(binName: "bin2", location:Location(locationName: "loc2")),qty : "1"))
+        self.binLocModel?.items.append(Item(itemnName: "item3", bin: Bin(binName: "bin3", location:Location(locationName: "loc3")),qty : "1"))
+        self.binLocModel?.items.append(Item(itemnName: "Mock1", bin: Bin(binName: "bin1", location:Location(locationName: "loc1")),qty : "1"))
     
     }
     func setTitle(name : String){
@@ -73,6 +75,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
         self.itemText.text = vc.selectedItem?.name
         self.binText.text = vc.selectedItem?.bin?.name
         self.locationText.text = vc.selectedItem?.bin?.location?.name
+        self.qtyText.text = String(describing: (vc.selectedItem?.qty)!)
         
         
     }

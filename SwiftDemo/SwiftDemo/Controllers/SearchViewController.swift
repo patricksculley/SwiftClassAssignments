@@ -10,7 +10,7 @@ import UIKit
 
 class SearchViewController: UITableViewController {
     
-    var items : [Item]? = [Item]()
+    var EntityObjects : [EntityProtocol]? = [EntityProtocol]()
     var filteredArray : [EntityProtocol] = [EntityProtocol]()
     var selectedItem : Item?
     let searchController = UISearchController(searchResultsController: nil)
@@ -35,7 +35,7 @@ class SearchViewController: UITableViewController {
 
     }
     override func viewWillAppear(_ animated: Bool) {
-        self.filteredArray = self.items! as [EntityProtocol]
+        self.filteredArray = (self.EntityObjects?.filter({ return $0.entityType == .ItemType}))!
         self.tableView.reloadData()
     }
 
@@ -83,9 +83,17 @@ class SearchViewController: UITableViewController {
     }
     
     func filterContentForSearchText(searchText: String, scope: String ) {
-        filteredArray = items!.filter { item in
-            
+        
+        let entityTypeObjects = EntityObjects?.filter({return String(describing: $0.entityType).lowercased() == scope.lowercased()})
+        
+        filteredArray = entityTypeObjects!.filter { item in
+            if searchText.isEmpty{
+                return true
+            }
             let objType = String(describing: item.entityType).lowercased()
+            if searchText.isEmpty && objType == scope.lowercased() {
+                return true
+            }
             return (item.name?.lowercased().contains(searchText.lowercased()))! && objType == scope.lowercased()
         }
         
@@ -114,9 +122,12 @@ extension SearchViewController: UISearchBarDelegate {
         filterContentForSearchText(searchText: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
           filterContentForSearchText(searchText: searchText, scope: searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex])
         
     }
+    
+    
     
 }
 
