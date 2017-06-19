@@ -94,8 +94,15 @@ class ViewController: UIViewController,ViewControllerProtocol {
     
     func showAlertController(entityType : EntityType){
         
-        weak var weakSelf = self
     
+        if self.binLocModel?.modelType == .BinType{
+        
+            let pickerView  = UIPickerView(frame: CGRect(x: 0, y: 0, width: UIApplication.shared.windows[0].bounds.width, height: 100))
+            
+            
+        
+        }
+        
         let alertController = UIAlertController(title: "\(entityType)", message: "Please Add \(entityType)", preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel,handler: { (action) -> Void in
@@ -104,16 +111,17 @@ class ViewController: UIViewController,ViewControllerProtocol {
         
         
         
-        let saveAction = UIAlertAction(title: "Save", style: .default, handler: { ( action) -> Void in
+        let saveAction = UIAlertAction(title: "Save", style: .default, handler: { [weak self]( action) -> Void in
             
             if  alertController.textFields?.first?.text?.characters.count == 0 {
-               weakSelf?.showErrorAlert(title: "Empty Value", message: "\(entityType) cannot be empty ")
+               self?.showErrorAlert(title: "Empty Value", message: "\(entityType) cannot be empty ")
                 return;
             }
             else if alertController.textFields?.first?.text?.characters.count != 0{
-                weakSelf?.binLocModel?.addElement(name: alertController.textFields?.first?.text!)
-                weakSelf?.binLocModel?.setName()
-                weakSelf?.setTitle(name: (alertController.textFields?.first?.text)!)
+                self?.binLocModel?.addElement(name: alertController.textFields?.first?.text!)
+                self?.binLocModel?.setName()
+                self?.setTitle(name: (alertController.textFields?.first?.text)!)
+                self!.binLocModel?.items.append( (self!.binLocModel?.modelType == .BinType) ? Bin(binName: alertController.textFields?.first?.text!, location: nil) : Location(locationName: alertController.textFields?.first?.text!))
                 alertController.dismiss(animated: true, completion: nil)
             }
             

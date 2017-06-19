@@ -18,7 +18,7 @@ enum EntityType  {
 }
 class BinLocModel: NSObject {
    
-    var items : [Item]! = [Item]()
+    var items : [EntityProtocol]! = [EntityProtocol]()
     var names : [String]! = [String]()
     var bins : [String]! = [String]()
     var locations : [String]! = [String]()
