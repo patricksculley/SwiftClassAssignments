@@ -8,12 +8,15 @@
 
 import UIKit
 import CoreData
+
+//MARK: - Enums
 enum EntityType : String {
     case ItemType = "ItemType"
     case BinType = "BinType"
     case LocationType = "LocationType"
 
 }
+
 
 enum ButtonTag : Int{
 
@@ -29,6 +32,8 @@ enum EmptyFieldError : String{
     case LocationFieldEmpty = "Location Cannot be Empty"
     case ItemFieldEmpty = "Item Cannot be Empty"
 }
+
+
 class ViewController: UIViewController,ViewControllerProtocol {
     var name : String?
     @IBOutlet weak var locationText: UITextField!
@@ -108,7 +113,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
         self.performSegue(withIdentifier:AppConstant.searchViewControllerSegueIdentifier , sender: self)
     }
 }
-
+//MARK: - PickerViewDelegate
 extension ViewController : UIPickerViewDelegate , UIPickerViewDataSource{
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -132,6 +137,7 @@ extension ViewController : UIPickerViewDelegate , UIPickerViewDataSource{
     
 }
 
+//MARK: - TextViewDelegate
 extension ViewController : UITextFieldDelegate{
    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -175,7 +181,7 @@ extension ViewController : UITextFieldDelegate{
         return ret
     }
 }
-
+//MARK: - Class Functions
 extension ViewController{
 
     func showAlertController(entityType : EntityType, sender : UIButton?){

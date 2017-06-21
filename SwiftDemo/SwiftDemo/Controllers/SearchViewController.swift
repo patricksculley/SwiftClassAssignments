@@ -11,7 +11,7 @@ import UIKit
 class SearchViewController: UITableViewController {
     
     var EntityObjects : [EntityBaseModel]? = [EntityBaseModel]()
-    var filteredArray : [EntityBaseModel] = [EntityBaseModel]()
+    var filteredArray : [EntityBaseModel]? = [EntityBaseModel]()
     var selectedItem : ItemModel?
     let searchController = UISearchController(searchResultsController: nil)
     let scoopButtonTitles = ["All",CoreDataModelName.ItemModel.rawValue,CoreDataModelName.BinModel.rawValue,CoreDataModelName.LocationModel.rawValue]
@@ -29,7 +29,7 @@ class SearchViewController: UITableViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        self.filteredArray = self.EntityObjects!
+        self.filteredArray = self.EntityObjects
         self.tableView.reloadData()
     }
 
@@ -42,24 +42,24 @@ class SearchViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredArray.count
+        return (filteredArray == nil) ? 0 : filteredArray!.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: AppConstant.searchViewControllerCellIdentifier)
         
-        switch (CoreDataModelName(rawValue :filteredArray[indexPath.row].entityTypeModel))!{
+        switch (CoreDataModelName(rawValue :filteredArray![indexPath.row].entityTypeModel))!{
         
         case .ItemModel :
-            cell?.textLabel?.text = "Item name : \((filteredArray[indexPath.row]).name ?? "")"
-            cell?.detailTextLabel?.text = "Bin Name = \((filteredArray[indexPath.row] as! ItemModel).iItemToBin?.name ?? "") Location Name = \((filteredArray[indexPath.row] as! ItemModel).iItemToBin?.binToLocation?.name ?? "")"
+            cell?.textLabel?.text = "Item name : \((filteredArray![indexPath.row]).name ?? "")"
+            cell?.detailTextLabel?.text = "Bin Name = \((filteredArray![indexPath.row] as! ItemModel).iItemToBin?.name ?? "") Location Name = \((filteredArray![indexPath.row] as! ItemModel).iItemToBin?.binToLocation?.name ?? "")"
             
         case .BinModel :
-            cell?.textLabel?.text = "Bin name : \((filteredArray[indexPath.row] ).name ?? "")"
-            cell?.detailTextLabel?.text = "Location name = \((filteredArray[indexPath.row] as! BinModel).binToLocation?.name ?? "") "
+            cell?.textLabel?.text = "Bin name : \((filteredArray![indexPath.row] ).name ?? "")"
+            cell?.detailTextLabel?.text = "Location name = \((filteredArray![indexPath.row] as! BinModel).binToLocation?.name ?? "") "
             
         case .LocationModel:
-            cell?.textLabel?.text = "Location name : \((filteredArray[indexPath.row]).name ?? "")"
+            cell?.textLabel?.text = "Location name : \((filteredArray![indexPath.row]).name ?? "")"
             cell?.detailTextLabel?.text = ""
             
         default : break
@@ -70,15 +70,11 @@ class SearchViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        selectedItem = filteredArray[indexPath.row] as? ItemModel
+        selectedItem = filteredArray![indexPath.row] as? ItemModel
         if (selectedItem != nil) {
             self.performSegue(withIdentifier: AppConstant.backToBinControllerSegueIdentifier, sender: self)
         }
     }
-    
-   
-
-  
 
 }
 //MARK: - SearchResult Update delegate
@@ -105,19 +101,21 @@ extension SearchViewController: UISearchBarDelegate {
 extension SearchViewController{
     func filterContentForSearchText(searchText: String, scope: String ) {
         
-        filteredArray = ((scope == "All") ? EntityObjects : EntityObjects?.filter({return $0.entityTypeModel!.lowercased() == scope.lowercased()}))!
-        
-        filteredArray = filteredArray.filter { item in
-            if searchText.isEmpty{
-                return true
+        if EntityObjects != nil{
+            filteredArray = ((scope == "All") ? EntityObjects : EntityObjects?.filter({return $0.entityTypeModel!.lowercased() == scope.lowercased()}))!
+            
+            filteredArray = filteredArray!.filter { item in
+                if searchText.isEmpty{
+                    return true
+                }
+                if searchText.isEmpty && item.entityTypeModel!.lowercased() == scope.lowercased() || searchText.isEmpty &&   scope.lowercased() == "All" {
+                    return true
+                }
+                return item.name!.lowercased().contains(searchText.lowercased()) && ((scope == "All") ? true : item.entityTypeModel!.lowercased() == scope.lowercased())
             }
-            if searchText.isEmpty && item.entityTypeModel!.lowercased() == scope.lowercased() || searchText.isEmpty &&   scope.lowercased() == "All" {
-                return true
-            }
-            return item.name!.lowercased().contains(searchText.lowercased()) && ((scope == "All") ? true : item.entityTypeModel!.lowercased() == scope.lowercased())
+            
+            tableView.reloadData()
         }
-        
-        tableView.reloadData()
     }
 }
 
