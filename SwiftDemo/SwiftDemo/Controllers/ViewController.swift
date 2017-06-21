@@ -87,9 +87,9 @@ class ViewController: UIViewController,ViewControllerProtocol {
     @IBAction func unwindToMenu(segue: UIStoryboardSegue) {
         let vc = segue.source as! SearchViewController
         self.itemText.text = vc.selectedItem?.name
-        self.binText.text = vc.selectedItem?.bin?.name
-        self.locationText.text = vc.selectedItem?.bin?.location?.name
-        self.qtyText.text = String(describing: (vc.selectedItem?.qty)!)
+        self.binText.text = vc.selectedItem?.iItemToBin?.name
+        self.locationText.text = vc.selectedItem?.iItemToBin?.binToLocation?.name
+        self.qtyText.text = String(describing: (vc.selectedItem!.qty))
         
         
     }
