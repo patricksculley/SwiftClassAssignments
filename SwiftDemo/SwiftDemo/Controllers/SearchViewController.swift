@@ -76,6 +76,33 @@ class SearchViewController: UITableViewController {
         }
     }
     
+   
+
+  
+
+}
+//MARK: - SearchResult Update delegate
+extension SearchViewController : UISearchResultsUpdating{
+    func updateSearchResults(for searchController: UISearchController) {
+            let searchBar = searchController.searchBar
+            let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
+            filterContentForSearchText(searchText: searchController.searchBar.text!, scope: scope)
+    }
+}
+
+//MARK: - SearchBar Delegate
+extension SearchViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        filterContentForSearchText(searchText: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+          filterContentForSearchText(searchText: searchText, scope: searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex])
+    }
+}
+
+//MARK: - Class Functions
+extension SearchViewController{
     func filterContentForSearchText(searchText: String, scope: String ) {
         
         filteredArray = ((scope == "All") ? EntityObjects : EntityObjects?.filter({return $0.entityTypeModel!.lowercased() == scope.lowercased()}))!
@@ -92,36 +119,6 @@ class SearchViewController: UITableViewController {
         
         tableView.reloadData()
     }
-
-  
-
-}
-
-extension SearchViewController : UISearchResultsUpdating{
-    func updateSearchResults(for searchController: UISearchController) {
-        
-            let searchBar = searchController.searchBar
-            let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
-            filterContentForSearchText(searchText: searchController.searchBar.text!, scope: scope)
-    
-    }
-    
-    
-    
-}
-extension SearchViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        
-        filterContentForSearchText(searchText: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
-    }
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-          filterContentForSearchText(searchText: searchText, scope: searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex])
-        
-    }
-    
-    
-    
 }
 
 
