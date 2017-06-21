@@ -99,6 +99,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as! SearchViewController
+        self.binLocModel?.getAllEntityBaseModel()
         vc.EntityObjects = self.binLocModel!.entityBaseModel
     }
 
