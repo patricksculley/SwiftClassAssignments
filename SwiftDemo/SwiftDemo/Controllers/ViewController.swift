@@ -7,7 +7,20 @@
 //
 
 import UIKit
+import CoreData
+enum EntityType : String {
+    case ItemType = "ItemType"
+    case BinType = "BinType"
+    case LocationType = "LocationType"
 
+}
+
+enum EmptyFieldError : String{
+
+    case BinFieldEmpty = "Bin Cannot be Empty"
+    case LocationFieldEmpty = "Location Cannot be Empty"
+    case ItemFieldEmpty = "Item Cannot be Empty"
+}
 class ViewController: UIViewController,ViewControllerProtocol {
     var name : String?
     @IBOutlet weak var locationText: UITextField!
@@ -21,7 +34,8 @@ class ViewController: UIViewController,ViewControllerProtocol {
         super.viewDidLoad()
         binLocModel = BinLocModel()
         self.title = "Bin View"
-        self.loadMockData()
+//        self.loadMockData()
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -32,10 +46,27 @@ class ViewController: UIViewController,ViewControllerProtocol {
 
     @IBAction func save(_ sender: UIButton) {
         
-        if itemText.text?.characters.count != 0{
-            let item = Item(itemnName: itemText.text, bin: Bin(binName: binText.text, location: Location(locationName: locationText.text)),qty : self.qtyText.text!)
-        self.binLocModel?.items.append(item)
+//        if itemText.text?.characters.count != 0{
+//            let item = Item(itemnName: itemText.text, bin: Bin(binName: binText.text, location: Location(locationName: locationText.text)),qty : self.qtyText.text!)
+//        self.binLocModel?.items.append(item)
+//        }
+       
+        if binText!.text!.isEmpty{
+            self.showErrorAlert(title: " Empty Field", message: EmptyFieldError.BinFieldEmpty.rawValue)
+            return
+        } else if locationText!.text!.isEmpty{
+            self.showErrorAlert(title: " Empty Field", message: EmptyFieldError.LocationFieldEmpty.rawValue)
+            return
+        } else if (itemText.text?.isEmpty)!{
+            self.showErrorAlert(title: " Empty Field", message: EmptyFieldError.ItemFieldEmpty.rawValue)
+            return
         }
+        
+        
+        let bin : BinModel = self.getCoreDataManagerObject().fetechRequest(entityName: CoreDataModelName.Bin.rawValue, predicate: NSPredicate(format: "name = %@", self.binText.text!)) as! BinModel
+        
+        
+    
     
     }
     
@@ -217,5 +248,15 @@ extension ViewController : UITextFieldDelegate{
         return ret
     }
     
+
+}
+
+extension UIViewController{
+    
+    func getCoreDataManagerObject()->CoreDataManager{
+    
+        return CoreDataManager.shared
+    }
+
     
 }

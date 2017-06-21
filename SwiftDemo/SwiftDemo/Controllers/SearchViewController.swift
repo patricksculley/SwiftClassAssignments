@@ -21,42 +21,29 @@ class SearchViewController: UITableViewController {
         
         searchController.searchBar.scopeButtonTitles = scoopButtonTitles
         searchController.searchBar.delegate = self
- 
-//        searchController.searchBar.showsScopeBar = true
-
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
-        
-        
 
     }
+
     override func viewWillAppear(_ animated: Bool) {
         self.filteredArray = self.EntityObjects!
         self.tableView.reloadData()
     }
 
-  
-
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80;
+        return 60;
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        
-        
-        
         return filteredArray.count
     }
-    
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: AppConstant.searchViewControllerCellIdentifier)
@@ -76,14 +63,16 @@ class SearchViewController: UITableViewController {
             cell?.detailTextLabel?.text = ""
         
         }
-       
         
         return cell!
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
         selectedItem = filteredArray[indexPath.row] as? Item
-        self.performSegue(withIdentifier: AppConstant.backToBinControllerSegueIdentifier, sender: self)
+        if (selectedItem != nil) {
+            self.performSegue(withIdentifier: AppConstant.backToBinControllerSegueIdentifier, sender: self)
+        }
     }
     
     func filterContentForSearchText(searchText: String, scope: String ) {

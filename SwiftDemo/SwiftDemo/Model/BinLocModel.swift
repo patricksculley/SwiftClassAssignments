@@ -8,14 +8,7 @@
 
 import UIKit
 
-enum EntityType  {
-    
-    case ItemType
-    case BinType
-    case LocationType
-    
-    
-}
+
 class BinLocModel: NSObject {
    
     var items : [EntityProtocol]! = [EntityProtocol]()
