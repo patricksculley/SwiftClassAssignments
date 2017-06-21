@@ -37,21 +37,26 @@ class ViewController: UIViewController,ViewControllerProtocol {
     @IBOutlet weak var qtyText: UITextField!
     @IBOutlet weak var pickerView: UIPickerView!
     
+    var pickerData : [EntityBaseModel] = [EntityBaseModel]()
+    
      var binLocModel : BinLocModel?
 
     override func viewDidLoad() {
+       
         super.viewDidLoad()
         binLocModel = BinLocModel()
-        self.binLocModel?.entityBaseModel = getCoreDataManagerObject().fetechRequest(entityName: CoreDataModelName.EntityBaseModel.rawValue, predicate: nil) as! [EntityBaseModel]
+        self.binLocModel.getAllEntityBaseModel()
         self.title = "Bin View"
-
-        
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+  
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as! SearchViewController
+        vc.EntityObjects = self.binLocModel?.items
     }
 
     @IBAction func save(_ sender: UIButton) {
@@ -60,18 +65,13 @@ class ViewController: UIViewController,ViewControllerProtocol {
 //            let item = Item(itemnName: itemText.text, bin: Bin(binName: binText.text, location: Location(locationName: locationText.text)),qty : self.qtyText.text!)
 //        self.binLocModel?.items.append(item)
 //        }
-       
         if binText!.text!.isEmpty{
             self.showErrorAlert(title: " Empty Field", message: EmptyFieldError.BinFieldEmpty.rawValue)
-            return
-        } else if locationText!.text!.isEmpty{
-            self.showErrorAlert(title: " Empty Field", message: EmptyFieldError.LocationFieldEmpty.rawValue)
             return
         } else if (itemText.text?.isEmpty)!{
             self.showErrorAlert(title: " Empty Field", message: EmptyFieldError.ItemFieldEmpty.rawValue)
             return
         }
-        
         
         let bin : BinModel = self.getCoreDataManagerObject().fetechRequest(entityName: CoreDataModelName.BinModel.rawValue, predicate: NSPredicate(format: "name = %@", self.binText.text!))![0] as! BinModel
         let itemModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.ItemModel.rawValue) as! ItemModel
@@ -82,17 +82,8 @@ class ViewController: UIViewController,ViewControllerProtocol {
             
                                 ])
         getCoreDataManagerObject().saveViewContext()
-        
-    
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc = segue.destination as! SearchViewController
-        vc.EntityObjects = self.binLocModel?.items
-    }
-   
-  
-    
+ 
     @IBAction func unwindToMenu(segue: UIStoryboardSegue) {
         let vc = segue.source as! SearchViewController
         self.itemText.text = vc.selectedItem?.name
@@ -109,42 +100,39 @@ class ViewController: UIViewController,ViewControllerProtocol {
         self.showAlertController(entityType: (self.binLocModel?.modelType)!,sender:sender )
     
     }
+
     @IBAction func searchBtnClick(sender : UIButton){
     
         self.performSegue(withIdentifier:AppConstant.searchViewControllerSegueIdentifier , sender: self)
-
     }
-    
-   
-
 }
 
 extension ViewController : UIPickerViewDelegate , UIPickerViewDataSource{
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return (binLocModel?.names.count)!
+        return pickerData.count
     }
 
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.binLocModel?.names[row]
+        return self.pickerData[row].name
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
-        if self.binLocModel?.names.count == 0{
+        if self.pickerData.count == 0{
             return
         }
         
-        self.setTitle(name: (self.binLocModel?.names[row])!)
+        self.setTitle(name: (self.pickerData[row].name)!)
         self.pickerView.isHidden = true
     }
     
 }
 
-
 extension ViewController : UITextFieldDelegate{
+   
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         var ret : Bool = true
         
@@ -154,6 +142,9 @@ extension ViewController : UITextFieldDelegate{
             self.binLocModel?.modelType = .BinType;
             self.binLocModel?.setName();
             self.pickerView.isHidden = false;
+            self.pickerData = self.binLocModel!.entityBaseModel.filter({ (entityModel) -> Bool in
+                return entityModel.entityTypeModel == EntityType.BinType.rawValue
+            })
             self.pickerView.reloadAllComponents() ;
             if (binText.text?.characters.count)! > 0 {
                 self.pickerView.selectRow((self.binLocModel?.getIndexOfValue(val: self.binText.text!))!, inComponent: 0, animated: true)
@@ -165,20 +156,20 @@ extension ViewController : UITextFieldDelegate{
             self.binLocModel?.modelType = .LocationType;
             self.binLocModel?.setName();
             self.pickerView.isHidden = false;
+            self.pickerData = self.binLocModel!.entityBaseModel.filter({ (entityModel) -> Bool in
+                return entityModel.entityTypeModel == EntityType.LocationType.rawValue
+            })
             self.pickerView.reloadAllComponents();
             if (locationText.text?.characters.count)! > 0 {
                 self.pickerView.selectRow((self.binLocModel?.getIndexOfValue(val: self.locationText.text!))!, inComponent: 0, animated: true)
             }
-
             ret = false
-      
         default : break
         }
         
         return ret
     }
 }
-
 
 extension ViewController{
 
@@ -219,6 +210,7 @@ extension ViewController{
                 }
                 alertController.dismiss(animated: true, completion: nil)
             }
+            self.binLocModel?.getAllEntityBaseModel()
         })
         alertController.addAction(cancelAction)
         alertController.addAction(saveAction)

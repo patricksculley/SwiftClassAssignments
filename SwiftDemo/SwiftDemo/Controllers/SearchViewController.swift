@@ -10,11 +10,11 @@ import UIKit
 
 class SearchViewController: UITableViewController {
     
-    var EntityObjects : [EntityProtocol]? = [EntityProtocol]()
-    var filteredArray : [EntityProtocol] = [EntityProtocol]()
-    var selectedItem : Item?
+    var EntityObjects : [EntityBaseModel]? = [EntityBaseModel]()
+    var filteredArray : [EntityBaseModel] = [EntityBaseModel]()
+    var selectedItem : ItemModel?
     let searchController = UISearchController(searchResultsController: nil)
-    let scoopButtonTitles = ["All","ItemType","BinType","LocationType"]
+    let scoopButtonTitles = ["All",EntityType.ItemType.rawValue,EntityType.BinType.rawValue,EntityType.LocationType.rawValue]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,18 +48,18 @@ class SearchViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: AppConstant.searchViewControllerCellIdentifier)
         
-        switch (filteredArray[indexPath.row].entityType){
+        switch (EntityType(rawValue :filteredArray[indexPath.row].entityTypeModel))!{
         
         case .ItemType :
-            cell?.textLabel?.text = "Item name : \((filteredArray[indexPath.row] as! Item).name ?? "")"
-            cell?.detailTextLabel?.text = "Bin Name = \((filteredArray[indexPath.row] as! Item).bin?.name ?? "") Location Name = \((filteredArray[indexPath.row] as! Item).bin?.location?.name ?? "")"
+            cell?.textLabel?.text = "Item name : \((filteredArray[indexPath.row]).name ?? "")"
+            cell?.detailTextLabel?.text = "Bin Name = \((filteredArray[indexPath.row] as! ItemModel).iItemToBin?.name ?? "") Location Name = \((filteredArray[indexPath.row] as! ItemModel).iItemToBin?.binToLocation?.name ?? "")"
             
         case .BinType :
-            cell?.textLabel?.text = "Bin name : \((filteredArray[indexPath.row] as! Bin).name ?? "")"
-            cell?.detailTextLabel?.text = "Location name = \((filteredArray[indexPath.row] as! Bin).location?.name ?? "") "
+            cell?.textLabel?.text = "Bin name : \((filteredArray[indexPath.row] ).name ?? "")"
+            cell?.detailTextLabel?.text = "Location name = \((filteredArray[indexPath.row] as! BinModel).binToLocation?.name ?? "") "
             
         case .LocationType:
-            cell?.textLabel?.text = "Location name : \((filteredArray[indexPath.row] as! Location).name ?? "")"
+            cell?.textLabel?.text = "Location name : \((filteredArray[indexPath.row]).name ?? "")"
             cell?.detailTextLabel?.text = ""
         
         }
@@ -69,7 +69,7 @@ class SearchViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        selectedItem = filteredArray[indexPath.row] as? Item
+        selectedItem = filteredArray[indexPath.row] as? ItemModel
         if (selectedItem != nil) {
             self.performSegue(withIdentifier: AppConstant.backToBinControllerSegueIdentifier, sender: self)
         }
@@ -77,17 +77,16 @@ class SearchViewController: UITableViewController {
     
     func filterContentForSearchText(searchText: String, scope: String ) {
         
-        let entityTypeObjects = (scope == "All") ? EntityObjects : EntityObjects?.filter({return String(describing: $0.entityType).lowercased() == scope.lowercased()})
+        let entityTypeObjects = (scope == "All") ? EntityObjects : EntityObjects?.filter({return $0.entityTypeModel.lowercased() == scope.lowercased()})
         
         filteredArray = entityTypeObjects!.filter { item in
             if searchText.isEmpty{
                 return true
             }
-            let objType = String(describing: item.entityType).lowercased()
-            if searchText.isEmpty && objType == scope.lowercased() || searchText.isEmpty &&   scope.lowercased() == "All" {
+            if searchText.isEmpty && item.entityTypeModel.lowercased() == scope.lowercased() || searchText.isEmpty &&   scope.lowercased() == "All" {
                 return true
             }
-            return (item.name?.lowercased().contains(searchText.lowercased()))! && (scope == "All") ? true : objType == scope.lowercased()
+            return (item.name?.lowercased().contains(searchText.lowercased()))! && (scope == "All") ? true : item.entityTypeModel.lowercased() == scope.lowercased()
         }
         
         tableView.reloadData()
