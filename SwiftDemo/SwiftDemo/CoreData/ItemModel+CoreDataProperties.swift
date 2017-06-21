@@ -17,6 +17,17 @@ extension ItemModel {
     }
 
     @NSManaged public var qty: Int16
-    @NSManaged public var iItemToBin: BinModel?
+    @NSManaged public var iItemToBin: BinModel!
+    
+    func setItem(itemDic : [String : Any]){
+    
+        self.qty = itemDic["quantity"] as! Int16
+        self.iItemToBin = itemDic["bin"] as! BinModel
+        self.name = itemDic["name"] as! String
+        self.entityTypeModel = EntityType.ItemType.rawValue
+        let id = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.ItemModel.rawValue, predicate: nil)?.count)! + 1
+        self.id = Int16(id)
+        
+    }
 
 }

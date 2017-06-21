@@ -17,9 +17,10 @@ import CoreData
 
 
 enum CoreDataModelName : String{
-    case Bin = "BinModel"
-    case Item = "ItemModel"
-    case Location = "LocationModel"
+    case BinModel = "BinModel"
+    case ItemModel = "ItemModel"
+    case LocationModel = "LocationModel"
+    case EntityBaseModel = "EntityBaseModel"
 }
 public final class CoreDataManager {
     public static let shared = CoreDataManager()                         //singleton instance
@@ -58,7 +59,7 @@ public final class CoreDataManager {
     }()
     
     public func saveViewContext() {
-        save(context: viewContext)
+        save(context: self.viewContext)
     }
     
     public func saveBackgroundContext() {
@@ -303,8 +304,6 @@ public final class CoreDataManager {
             let managedObj =  NSManagedObject(entity: entityDescription!, insertInto: self.viewContext)
             
             return managedObj;
-       
-        
         
     }
 

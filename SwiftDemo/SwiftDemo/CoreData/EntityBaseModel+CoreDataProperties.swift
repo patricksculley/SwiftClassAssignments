@@ -17,7 +17,7 @@ extension EntityBaseModel {
     }
 
     @NSManaged public var id: Int16
-    @NSManaged public var name: String?
-    @NSManaged public var entityTypeModel: String?
+    @NSManaged public var name: String!
+    @NSManaged public var entityTypeModel: String!
 
 }

@@ -12,4 +12,5 @@ import CoreData
 @objc(BinModel)
 public class BinModel: EntityBaseModel {
 
+    
 }

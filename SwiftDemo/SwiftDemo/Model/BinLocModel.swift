@@ -17,6 +17,8 @@ class BinLocModel: NSObject {
     var locations : [String]! = [String]()
     var modelType : EntityType = .BinType
     
+    var entityBaseModel : [EntityBaseModel]!
+    
     func addElement(name : String? ){
         if name == nil {return}
         

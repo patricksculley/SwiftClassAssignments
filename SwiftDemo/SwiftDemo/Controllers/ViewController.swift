@@ -15,8 +15,16 @@ enum EntityType : String {
 
 }
 
-enum EmptyFieldError : String{
+enum ButtonTag : Int{
 
+    case AddBin = 1
+    case AddLocation = 2
+}
+
+enum EmptyFieldError : String{
+    
+    
+    case EmtpyFieldTitle = "Empty Field"
     case BinFieldEmpty = "Bin Cannot be Empty"
     case LocationFieldEmpty = "Location Cannot be Empty"
     case ItemFieldEmpty = "Item Cannot be Empty"
@@ -28,11 +36,13 @@ class ViewController: UIViewController,ViewControllerProtocol {
     @IBOutlet weak var itemText: UITextField!
     @IBOutlet weak var qtyText: UITextField!
     @IBOutlet weak var pickerView: UIPickerView!
+    
      var binLocModel : BinLocModel?
-  
+
     override func viewDidLoad() {
         super.viewDidLoad()
         binLocModel = BinLocModel()
+        self.binLocModel?.entityBaseModel = getCoreDataManagerObject().fetechRequest(entityName: "", predicate: <#T##NSPredicate?#>)
         self.title = "Bin View"
 //        self.loadMockData()
         
@@ -63,10 +73,16 @@ class ViewController: UIViewController,ViewControllerProtocol {
         }
         
         
-        let bin : BinModel = self.getCoreDataManagerObject().fetechRequest(entityName: CoreDataModelName.Bin.rawValue, predicate: NSPredicate(format: "name = %@", self.binText.text!)) as! BinModel
+        let bin : BinModel = self.getCoreDataManagerObject().fetechRequest(entityName: CoreDataModelName.Bin.rawValue, predicate: NSPredicate(format: "name = %@", self.binText.text!))![0] as! BinModel
+        let itemModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.Item.rawValue) as! ItemModel
+        itemModel.setItem(itemDic: [
+                                "name":self.itemText.text!,
+                                "bin":bin,
+                                "quantity" : Int16(self.qtyText.text!)!
+            
+                                ])
+        getCoreDataManagerObject().saveViewContext()
         
-        
-    
     
     }
     
@@ -123,8 +139,8 @@ class ViewController: UIViewController,ViewControllerProtocol {
     
     @IBAction func changeSegue(sender: UIButton){
         self.pickerView.isHidden = true
-        self.binLocModel?.modelType = (sender.tag == 1) ? .BinType : .LocationType
-        self.showAlertController(entityType: (self.binLocModel?.modelType)!)
+        self.binLocModel?.modelType = (sender.tag == ButtonTag.AddBin.rawValue) ? .BinType : .LocationType
+        self.showAlertController(entityType: (self.binLocModel?.modelType)!,sender:sender )
     
     }
     @IBAction func searchBtnClick(sender : UIButton){
@@ -133,16 +149,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
 
     }
     
-    func showAlertController(entityType : EntityType){
-        
-    
-        if self.binLocModel?.modelType == .BinType{
-        
-            let pickerView  = UIPickerView(frame: CGRect(x: 0, y: 0, width: UIApplication.shared.windows[0].bounds.width, height: 100))
-            
-            
-        
-        }
+    func showAlertController(entityType : EntityType, sender : UIButton?){
         
         let alertController = UIAlertController(title: "\(entityType)", message: "Please Add \(entityType)", preferredStyle: .alert)
         
@@ -152,17 +159,33 @@ class ViewController: UIViewController,ViewControllerProtocol {
         
         
         
-        let saveAction = UIAlertAction(title: "Save", style: .default, handler: { [weak self]( action) -> Void in
+        let saveAction = UIAlertAction(title: "Save", style: .default, handler: { [unowned self, weak sender]( action) -> Void in
             
-            if  alertController.textFields?.first?.text?.characters.count == 0 {
-               self?.showErrorAlert(title: "Empty Value", message: "\(entityType) cannot be empty ")
+            if  alertController.textFields!.first!.text!.isEmpty {
+               self.showErrorAlert(title: EmptyFieldError.EmtpyFieldTitle.rawValue, message: "Add Name")
                 return;
             }
-            else if alertController.textFields?.first?.text?.characters.count != 0{
-                self?.binLocModel?.addElement(name: alertController.textFields?.first?.text!)
-                self?.binLocModel?.setName()
-                self?.setTitle(name: (alertController.textFields?.first?.text)!)
-                self!.binLocModel?.items.append( (self!.binLocModel?.modelType == .BinType) ? Bin(binName: alertController.textFields?.first?.text!, location: nil) : Location(locationName: alertController.textFields?.first?.text!))
+            else if !alertController.textFields!.first!.text!.isEmpty{
+                self.binLocModel?.addElement(name: alertController.textFields!.first!.text!)
+                self.binLocModel?.setName()
+                self.setTitle(name: (alertController.textFields?.first?.text)!)
+//                self!.binLocModel?.items.append( (self!.binLocModel?.modelType == .BinType) ? Bin(binName: alertController.textFields?.first?.text!, location: nil) : Location(locationName: alertController.textFields?.first?.text!))
+                
+               
+                if sender?.tag == ButtonTag.AddBin.rawValue{
+                    
+                    if self.locationText.text!.isEmpty{
+                        self.showErrorAlert(title: "Empty Location", message: "Please Select Location first")
+                    }
+                    
+                    let binModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.Bin.rawValue) as! BinModel
+                    binModel.setBin(binDict:[
+                                    "name": alertController.textFields!.first!.text!,
+                                    
+                                    ])
+                    
+                    
+                }
                 alertController.dismiss(animated: true, completion: nil)
             }
             

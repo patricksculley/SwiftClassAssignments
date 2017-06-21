@@ -17,6 +17,16 @@ extension LocationModel {
     }
 
     @NSManaged public var locationToBin: NSSet?
+    
+    
+    func setBin (locDict : [String : Any]){
+        self.name = binDict["name"] as! String
+        
+        self.id = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.BinModel.rawValue, predicate: nil)?.count)! + 1
+        self.entityTypeModel = EntityType.LocationType.rawValue
+        
+        
+    }
 
 }
 
