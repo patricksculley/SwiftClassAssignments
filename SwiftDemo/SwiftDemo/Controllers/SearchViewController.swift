@@ -14,7 +14,7 @@ class SearchViewController: UITableViewController {
     var filteredArray : [EntityBaseModel] = [EntityBaseModel]()
     var selectedItem : ItemModel?
     let searchController = UISearchController(searchResultsController: nil)
-    let scoopButtonTitles = ["All",EntityType.ItemType.rawValue,EntityType.BinType.rawValue,EntityType.LocationType.rawValue]
+    let scoopButtonTitles = ["All",CoreDataModelName.ItemModel.rawValue,CoreDataModelName.BinModel.rawValue,CoreDataModelName.LocationModel.rawValue]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,20 +48,21 @@ class SearchViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: AppConstant.searchViewControllerCellIdentifier)
         
-        switch (EntityType(rawValue :filteredArray[indexPath.row].entityTypeModel))!{
+        switch (CoreDataModelName(rawValue :filteredArray[indexPath.row].entityTypeModel))!{
         
-        case .ItemType :
+        case .ItemModel :
             cell?.textLabel?.text = "Item name : \((filteredArray[indexPath.row]).name ?? "")"
             cell?.detailTextLabel?.text = "Bin Name = \((filteredArray[indexPath.row] as! ItemModel).iItemToBin?.name ?? "") Location Name = \((filteredArray[indexPath.row] as! ItemModel).iItemToBin?.binToLocation?.name ?? "")"
             
-        case .BinType :
+        case .BinModel :
             cell?.textLabel?.text = "Bin name : \((filteredArray[indexPath.row] ).name ?? "")"
             cell?.detailTextLabel?.text = "Location name = \((filteredArray[indexPath.row] as! BinModel).binToLocation?.name ?? "") "
             
-        case .LocationType:
+        case .LocationModel:
             cell?.textLabel?.text = "Location name : \((filteredArray[indexPath.row]).name ?? "")"
             cell?.detailTextLabel?.text = ""
-        
+            
+        default : break
         }
         
         return cell!
@@ -77,16 +78,16 @@ class SearchViewController: UITableViewController {
     
     func filterContentForSearchText(searchText: String, scope: String ) {
         
-        let entityTypeObjects = (scope == "All") ? EntityObjects : EntityObjects?.filter({return $0.entityTypeModel.lowercased() == scope.lowercased()})
+        filteredArray = ((scope == "All") ? EntityObjects : EntityObjects?.filter({return $0.entityTypeModel!.lowercased() == scope.lowercased()}))!
         
-        filteredArray = entityTypeObjects!.filter { item in
+        filteredArray = filteredArray.filter { item in
             if searchText.isEmpty{
                 return true
             }
-            if searchText.isEmpty && item.entityTypeModel.lowercased() == scope.lowercased() || searchText.isEmpty &&   scope.lowercased() == "All" {
+            if searchText.isEmpty && item.entityTypeModel!.lowercased() == scope.lowercased() || searchText.isEmpty &&   scope.lowercased() == "All" {
                 return true
             }
-            return (item.name?.lowercased().contains(searchText.lowercased()))! && (scope == "All") ? true : item.entityTypeModel.lowercased() == scope.lowercased()
+            return item.name!.lowercased().contains(searchText.lowercased()) && ((scope == "All") ? true : item.entityTypeModel!.lowercased() == scope.lowercased())
         }
         
         tableView.reloadData()

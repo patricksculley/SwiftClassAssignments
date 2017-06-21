@@ -24,9 +24,12 @@ extension ItemModel {
         self.qty = itemDic["quantity"] as! Int16
         self.iItemToBin = itemDic["bin"] as! BinModel
         self.name = itemDic["name"] as! String
-        self.entityTypeModel = EntityType.ItemType.rawValue
-        let id = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.ItemModel.rawValue, predicate: nil)?.count)! + 1
-        self.id = Int16(id)
+        self.entityTypeModel = CoreDataModelName.ItemModel.rawValue
+        if let  count  = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.ItemModel.rawValue, predicate: nil)?.count)  {
+            self.id = Int16(count + 1)
+        } else{
+            self.id = 1
+        }
         
     }
 

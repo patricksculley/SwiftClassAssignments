@@ -22,9 +22,14 @@ extension LocationModel {
     func setLocation (locDict : [String : Any]){
         self.name = locDict["name"] as! String
         
-        let id = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.ItemModel.rawValue, predicate: nil)?.count)! + 1
-        self.id = Int16(id)
-        self.entityTypeModel = EntityType.LocationType.rawValue
+        if let  count  = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.ItemModel.rawValue, predicate: nil)?.count)  {
+            self.id = Int16(count + 1)
+        } else{
+            self.id = 1
+        }
+        
+        
+        self.entityTypeModel = CoreDataModelName.LocationModel.rawValue
         
         
     }

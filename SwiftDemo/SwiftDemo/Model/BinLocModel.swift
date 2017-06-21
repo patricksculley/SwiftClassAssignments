@@ -17,7 +17,7 @@ class BinLocModel: NSObject {
     var locations : [String]! = [String]()
     var modelType : EntityType = .BinType
     
-    var entityBaseModel : [EntityBaseModel]!
+    var entityBaseModel : [EntityBaseModel]?
     
     func addElement(name : String? ){
         if name == nil {return}
@@ -71,6 +71,6 @@ class BinLocModel: NSObject {
     
     func getAllEntityBaseModel(){
     
-        self.entityBaseModel =  CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.EntityBaseModel.rawValue, predicate: nil) as! [EntityBaseModel]
+        self.entityBaseModel =  CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.EntityBaseModel.rawValue, predicate: nil) as? [EntityBaseModel]
     }
 }

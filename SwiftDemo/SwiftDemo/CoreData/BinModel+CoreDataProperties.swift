@@ -21,10 +21,13 @@ extension BinModel {
     
     func setBin (binDict : [String : Any]){
         self.name = binDict["name"] as! String
-        self.binToLocation = binDict["location"] as! LocationModel
-            
-        self.id = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.BinModel.rawValue, predicate: nil)?.count)! + 1
-        self.entityTypeModel = EntityType.BinType.rawValue
+        self.binToLocation = binDict["location"] as? LocationModel
+        if let  count  = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.ItemModel.rawValue, predicate: nil)?.count)  {
+            self.id = Int16(count + 1)
+        } else{
+            self.id = 1
+        }
+        self.entityTypeModel = CoreDataModelName.BinModel.rawValue
         
     
     }
