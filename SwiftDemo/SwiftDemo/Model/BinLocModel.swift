@@ -37,4 +37,32 @@ class BinLocModel: NSObject {
     
       return  names.index(of: val)!
     }
+    func loadMockData(){
+        
+        self.modelType = .BinType
+        self.addElement(name: "bin 1")
+        self.addElement(name: "bin 2")
+        self.addElement(name: "bin 3")
+        
+        self.modelType = .LocationType
+        self.addElement(name: "loc 1")
+        self.addElement(name: "loc 2")
+        self.addElement(name: "loc 3")
+        
+        self.items.append(Item(itemnName: "item1", bin: Bin(binName: "bin1", location:Location(locationName: "loc1")),qty : "1"))
+        self.items.append(Item(itemnName: "item2", bin: Bin(binName: "bin2", location:Location(locationName: "loc2")),qty : "1"))
+        self.items.append(Item(itemnName: "item3", bin: Bin(binName: "bin3", location:Location(locationName: "loc3")),qty : "1"))
+        self.items.append(Item(itemnName: "Mock1", bin: Bin(binName: "bin1", location:Location(locationName: "loc1")),qty : "1"))
+        
+        
+        self.items.append(Bin(binName: "bin1", location:Location(locationName: "loc1")))
+        self.items.append(Bin(binName: "bin2", location:Location(locationName: "loc2")))
+        self.items.append(Bin(binName: "bin3", location:Location(locationName: "loc3")))
+        
+        self.items.append(Location(locationName: "loc1"))
+        self.items.append(Location(locationName: "loc2"))
+        self.items.append(Location(locationName: "loc3"))
+        
+        
+    }
 }

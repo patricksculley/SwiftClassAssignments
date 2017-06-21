@@ -42,9 +42,9 @@ class ViewController: UIViewController,ViewControllerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         binLocModel = BinLocModel()
-        self.binLocModel?.entityBaseModel = getCoreDataManagerObject().fetechRequest(entityName: "", predicate: <#T##NSPredicate?#>)
+        self.binLocModel?.entityBaseModel = getCoreDataManagerObject().fetechRequest(entityName: CoreDataModelName.EntityBaseModel.rawValue, predicate: nil) as! [EntityBaseModel]
         self.title = "Bin View"
-//        self.loadMockData()
+
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -73,8 +73,8 @@ class ViewController: UIViewController,ViewControllerProtocol {
         }
         
         
-        let bin : BinModel = self.getCoreDataManagerObject().fetechRequest(entityName: CoreDataModelName.Bin.rawValue, predicate: NSPredicate(format: "name = %@", self.binText.text!))![0] as! BinModel
-        let itemModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.Item.rawValue) as! ItemModel
+        let bin : BinModel = self.getCoreDataManagerObject().fetechRequest(entityName: CoreDataModelName.BinModel.rawValue, predicate: NSPredicate(format: "name = %@", self.binText.text!))![0] as! BinModel
+        let itemModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.ItemModel.rawValue) as! ItemModel
         itemModel.setItem(itemDic: [
                                 "name":self.itemText.text!,
                                 "bin":bin,
@@ -90,34 +90,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
         let vc = segue.destination as! SearchViewController
         vc.EntityObjects = self.binLocModel?.items
     }
-    func loadMockData(){
-        
-        self.binLocModel?.modelType = .BinType
-        self.binLocModel?.addElement(name: "bin 1")
-        self.binLocModel?.addElement(name: "bin 2")
-        self.binLocModel?.addElement(name: "bin 3")
-        
-        self.binLocModel?.modelType = .LocationType
-        self.binLocModel?.addElement(name: "loc 1")
-        self.binLocModel?.addElement(name: "loc 2")
-        self.binLocModel?.addElement(name: "loc 3")
-        
-        self.binLocModel?.items.append(Item(itemnName: "item1", bin: Bin(binName: "bin1", location:Location(locationName: "loc1")),qty : "1"))
-        self.binLocModel?.items.append(Item(itemnName: "item2", bin: Bin(binName: "bin2", location:Location(locationName: "loc2")),qty : "1"))
-        self.binLocModel?.items.append(Item(itemnName: "item3", bin: Bin(binName: "bin3", location:Location(locationName: "loc3")),qty : "1"))
-        self.binLocModel?.items.append(Item(itemnName: "Mock1", bin: Bin(binName: "bin1", location:Location(locationName: "loc1")),qty : "1"))
-        
-        
-        self.binLocModel?.items.append(Bin(binName: "bin1", location:Location(locationName: "loc1")))
-        self.binLocModel?.items.append(Bin(binName: "bin2", location:Location(locationName: "loc2")))
-        self.binLocModel?.items.append(Bin(binName: "bin3", location:Location(locationName: "loc3")))
-        
-        self.binLocModel?.items.append(Location(locationName: "loc1"))
-        self.binLocModel?.items.append(Location(locationName: "loc2"))
-        self.binLocModel?.items.append(Location(locationName: "loc3"))
-        
-    
-    }
+   
     func setTitle(name : String){
        
         switch ((self.binLocModel)!.modelType){
@@ -178,7 +151,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
                         self.showErrorAlert(title: "Empty Location", message: "Please Select Location first")
                     }
                     
-                    let binModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.Bin.rawValue) as! BinModel
+                    let binModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.BinModel.rawValue) as! BinModel
                     binModel.setBin(binDict:[
                                     "name": alertController.textFields!.first!.text!,
                                     

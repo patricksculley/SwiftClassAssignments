@@ -20,9 +20,10 @@ extension LocationModel {
     
     
     func setBin (locDict : [String : Any]){
-        self.name = binDict["name"] as! String
+        self.name = locDict["name"] as! String
         
-        self.id = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.BinModel.rawValue, predicate: nil)?.count)! + 1
+        let id = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.ItemModel.rawValue, predicate: nil)?.count)! + 1
+        self.id = Int16(id)
         self.entityTypeModel = EntityType.LocationType.rawValue
         
         
