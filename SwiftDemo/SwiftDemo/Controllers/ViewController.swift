@@ -91,14 +91,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
         vc.EntityObjects = self.binLocModel?.items
     }
    
-    func setTitle(name : String){
-       
-        switch ((self.binLocModel)!.modelType){
-            case EntityType.BinType : self.binText.text = name
-            case  EntityType.LocationType: self.locationText.text = name
-            default : break
-        }
-    }
+  
     
     @IBAction func unwindToMenu(segue: UIStoryboardSegue) {
         let vc = segue.source as! SearchViewController
@@ -122,66 +115,7 @@ class ViewController: UIViewController,ViewControllerProtocol {
 
     }
     
-    func showAlertController(entityType : EntityType, sender : UIButton?){
-        
-        let alertController = UIAlertController(title: "\(entityType)", message: "Please Add \(entityType)", preferredStyle: .alert)
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel,handler: { (action) -> Void in
-            alertController.dismiss(animated: true, completion: nil)
-        })
-        
-        
-        
-        let saveAction = UIAlertAction(title: "Save", style: .default, handler: { [unowned self, weak sender]( action) -> Void in
-            
-            if  alertController.textFields!.first!.text!.isEmpty {
-               self.showErrorAlert(title: EmptyFieldError.EmtpyFieldTitle.rawValue, message: "Add Name")
-                return;
-            }
-            else if !alertController.textFields!.first!.text!.isEmpty{
-                self.binLocModel?.addElement(name: alertController.textFields!.first!.text!)
-                self.binLocModel?.setName()
-                self.setTitle(name: (alertController.textFields?.first?.text)!)
-//                self!.binLocModel?.items.append( (self!.binLocModel?.modelType == .BinType) ? Bin(binName: alertController.textFields?.first?.text!, location: nil) : Location(locationName: alertController.textFields?.first?.text!))
-                
-               
-                if sender?.tag == ButtonTag.AddBin.rawValue{
-                    
-                    if self.locationText.text!.isEmpty{
-                        self.showErrorAlert(title: "Empty Location", message: "Please Select Location first")
-                    }
-                    
-                    let binModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.BinModel.rawValue) as! BinModel
-                    binModel.setBin(binDict:[
-                                    "name": alertController.textFields!.first!.text!,
-                                    
-                                    ])
-                    
-                    
-                }
-                alertController.dismiss(animated: true, completion: nil)
-            }
-            
-        })
-        alertController.addAction(cancelAction)
-        alertController.addAction(saveAction)
-        
-        alertController.addTextField { (textField) in
-            textField.placeholder = "\(entityType)"
-        }
-        
-        self.present(alertController, animated: true, completion: nil)
-    
-        
-    
-    }
-    
-    func showErrorAlert (title : String, message : String){
-    
-         let alert = UIAlertView(title: "", message: message, delegate: nil, cancelButtonTitle: "OK")
-        alert.show()
-    
-    }
+   
 
 }
 
@@ -243,16 +177,75 @@ extension ViewController : UITextFieldDelegate{
         
         return ret
     }
-    
-
 }
 
-extension UIViewController{
+
+extension ViewController{
+
+    func showAlertController(entityType : EntityType, sender : UIButton?){
+        
+        let alertController = UIAlertController(title: "\(entityType)", message: "Please Add \(entityType)", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel,handler: { (action) -> Void in
+            alertController.dismiss(animated: true, completion: nil)
+        })
+        let saveAction = UIAlertAction(title: "Save", style: .default, handler: { [unowned self, weak sender]( action) -> Void in
+
+            if  alertController.textFields!.first!.text!.isEmpty {
+                self.showErrorAlert(title: EmptyFieldError.EmtpyFieldTitle.rawValue, message: "Add Name")
+                return;
+            }
+            else if !alertController.textFields!.first!.text!.isEmpty {
+                self.binLocModel?.addElement(name: alertController.textFields!.first!.text!)
+                self.binLocModel?.setName()
+                self.setTitle(name: (alertController.textFields?.first?.text)!)
+
+                if sender?.tag == ButtonTag.AddBin.rawValue{
+                    if self.locationText.text!.isEmpty {
+                        self.showErrorAlert(title: "Empty Location", message: "Please Select Location first")
+                    }
+                    let binModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.BinModel.rawValue) as! BinModel
+                    binModel.setBin(binDict:[
+                        "name": alertController.textFields!.first!.text!,
+                        "location":self.getCoreDataManagerObject().fetechRequest(entityName: EntityType.LocationType.rawValue, predicate: NSPredicate(format: "name = %@", self.locationText.text!))!.first as! LocationModel
+                        ])
+                    self.getCoreDataManagerObject().saveViewContext()
+                    
+                } else{
+                    let locModel = self.getCoreDataManagerObject().newManagedObject(entityName: CoreDataModelName.BinModel.rawValue) as! LocationModel
+                    locModel.setLocation(locDict: [
+                        "name": alertController.textFields!.first!.text!,
+                        ])
+                    self.getCoreDataManagerObject().saveViewContext()
+                }
+                alertController.dismiss(animated: true, completion: nil)
+            }
+        })
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        alertController.addTextField { (textField) in
+            textField.placeholder = "\(entityType)"
+        }
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func setTitle(name : String){
+        
+        switch ((self.binLocModel)!.modelType){
+        case EntityType.BinType : self.binText.text = name
+        case  EntityType.LocationType: self.locationText.text = name
+        default : break
+        }
+    }
+    
+    func showErrorAlert (title : String, message : String){
+        
+        let alert = UIAlertView(title: "", message: message, delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
+        
+    }
     
     func getCoreDataManagerObject()->CoreDataManager{
-    
+        
         return CoreDataManager.shared
     }
-
-    
 }

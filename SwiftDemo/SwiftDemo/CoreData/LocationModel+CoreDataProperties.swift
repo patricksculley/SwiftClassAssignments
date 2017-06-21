@@ -19,7 +19,7 @@ extension LocationModel {
     @NSManaged public var locationToBin: NSSet?
     
     
-    func setBin (locDict : [String : Any]){
+    func setLocation (locDict : [String : Any]){
         self.name = locDict["name"] as! String
         
         let id = (CoreDataManager.shared.fetechRequest(entityName: CoreDataModelName.ItemModel.rawValue, predicate: nil)?.count)! + 1

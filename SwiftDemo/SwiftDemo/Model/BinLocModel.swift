@@ -37,6 +37,9 @@ class BinLocModel: NSObject {
     
       return  names.index(of: val)!
     }
+   
+    
+    
     func loadMockData(){
         
         self.modelType = .BinType
