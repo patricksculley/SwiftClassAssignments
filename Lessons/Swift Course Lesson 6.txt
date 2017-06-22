@@ -1,0 +1,111 @@
+
+Data model versioning:
+Select the model and Editor->Add Model Version
+Set the current version in the data model properties and auto-migration will happen automatically
+
+Use refreshObject:mergeChanges: to get the latest data from CoreData database
+
+retainsRegisteredObjects: Retains a strong reference to objects in memory. Recommended not to use.
+Then release the context to release the managed objects: myManagedObjectContext = nil
+
+To access the Managed Object context for the main thread:
+persistentContainer.viewContext
+
+Background context:
+persistentContainer.performBackgroundTask { 
+	(managedContext:NSManagedObjectContext) in 
+}
+or persistentContainer.newBackgroundContext()
+
+context.automaticallyMergesChangesFromParent means automatically pick up changes from other contexts 
+
+Main context(UI data) -> CoreData <- background contexts
+
+
+You can specify a different policy for your contexts to dictate how discrepancies should be handled between the context and the persistence store. 
+
+The NSErrorMergePolicy is the only policy that generates an error. 
+Other policies—NSMergeByPropertyStoreTrumpMergePolicy, NSMergeByPropertyObjectTrumpMergePolicy, and NSOverwriteMergePolicy—allow the save to proceed by merging the state of the edited objects with the state of the objects in the store in different ways. 
+The NSRollbackMergePolicy discards in-memory state changes for objects in conflict and uses the persistent store’s version of the objects’ state
+
+Use request.fetchLimit = 100 to limit the fetch size
+
+TableViewController refresh:
+Select the Table view controller in storyboard and enable Refreshing
+Drag an outlet from the Refresh control to the swift file (Connection: Outlet, Name: refreshHandler, Type: UIRefreshControl)
+
+Create a URL Request Service:
+func doURLRequest(objectType:String)	{
+    let requestURL: URL = URL(string: "http://localhost:4002/\(objectType)")!
+    let urlRequest: URLRequest = URLRequest(url: requestURL)
+    let session = URLSession.shared
+    let task = session.dataTask(with: urlRequest) {
+        (data, response, error) -> Void in
+			let httpResponse = response as! HTTPURLResponse
+			let statusCode = httpResponse.statusCode
+			if (statusCode == 200) {
+				print("Everyone is fine, file downloaded successfully.")
+				readJSONArray(data: data)
+			}
+    }
+    task.resume()
+}
+
+Read the JSON payload from request:
+func readJSONArray(data:Data?) -> [Any]	{
+    do {
+        let json = try JSONSerialization.jsonObject(with: data!, options:.allowFragments)
+        if let array = json as? [Any]    {
+            for object in array {
+                if let jsonObject = object as? Dictionary<String, Any> {
+                    if let stringValue = jsonObject["name"] as? String {
+                        print("Name: \(stringValue)")
+                    }
+                }
+                if let jsonArray = object as? [Any] {
+                    print("nestedArray found: \(jsonArray.count)")
+                }
+            }
+            return array
+        }
+    } catch {
+        print("Error with Json: \(error)")
+    }
+    return [Any]()
+}
+
+Enable insecure requests:
+Update info.plist and add a NSAppTransportSecurity Dictionary and press enter to register it. Once it has been added to your list, right click the item and select “Add row”. Then type in “NSAllowsArbitraryLoads” Boolean and set the value to YES. 
+
+JSON Server:
+Fast and easy JSON server. Update mock-data.json to add items
+
+Dispatch on background thread:
+DispatchQueue.global(qos: .userInitiated).async { 
+ 
+}
+
+Dispatch on main thread
+DispatchQueue.main.async { 
+
+}
+
+Dispatch something later on
+let delayInSeconds = 1.0 
+DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) { 
+  
+}
+
+Implement URLDataService methods for retrieving and de-serializing entities from web service
+Make sure you have the CoreDataFetch object finder methods are implemented
+
+Implement CoreDataLoad to load the results on a background thread
+
+Add an extension to EntityBase for de-serializing the JSON objects returned from the server to NSManagedObjects
+
+Implement a NSFetchedResultsControllerDelegate protocol extension in your TableViewController
+Update CoreDataFetch and add a getFetchedResultsController method
+Implement a initializeFetchedResultsController in the TableViewController 
+Replace the array and tableView delegate methods with the fetchResultsController
+
+Call coreDataLoad.loadEntities when the refresh controller is pulled down 

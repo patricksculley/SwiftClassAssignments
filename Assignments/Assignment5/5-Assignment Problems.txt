@@ -1,0 +1,20 @@
+Problem 1) Create a data model for Item, Location, Bin
+
+Add fields for name, entityType
+Create FK relationships and inverses including one to many, cascade
+Create an Abstract class move name, id values to that class
+Bonues: Extend the abstract class with EntityType getters and setters from enum
+
+Problem 2) Persist entities in database
+Insert a new Location when clicking + Add
+Insert a new Bin when clicking Add and use the current location value as Location
+Add validation to the Bin requiring Location not be non-optional
+Display an error message if Location is nil when adding a Bin - "Select a location"
+Create a FetchUtility function for finding Location by name
+Use fetch Location by name function to make sure Location names are unique
+
+Problem 3) CoreData with TableViewController
+Add the context to the class: let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+Create a fetchRequest function for finding Items sorted by name
+Add fetched results to an array
+Pass the selected entity back to the Edit ItemViewController

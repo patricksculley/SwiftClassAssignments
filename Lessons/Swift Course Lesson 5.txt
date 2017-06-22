@@ -1,0 +1,108 @@
+Create a data model
+Add fields. Discuss types of code generation types
+Create FK relationships and inverses
+Assign one to many, cascade
+Create an Abstract class move values to that class
+Extend the abstract class with EntityType getters and setters from enum
+
+Creating entities
+Insert a new Location when clicking + Add
+Insert a new Bin when clicking Add and use the current location value
+Add validation to the Bin requiring Location not be non-optional
+Display an error message if Bin is nil when adding a location - error.localizedDescription
+Create a FetchUtility function for finding Location by name
+Create find item by name function to make sure item names are unique
+
+Using with TableViewController
+Add the context to the class let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+Create a fetch utility function for finding Items sorted by name
+Add fetched results to an array
+Pass the selected entity back to the Edit Item ViewController
+
+Updating entities
+Implement the ItemVCProtocol for the EditItem VC
+Add a minimum length validation to name
+call validateForUpdate before updating and display the error message
+
+Creating records:
+
+@IBAction func saveButtonHandler(sender:UIButton)    {
+	let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+	let item = Item(context: context)
+	item.name = nameTextField.text!
+	item.entityType = EntityBase.EntityType.Item
+	let bin = Bin(context: context)
+	bin.name = "Closet"
+	item.itemToBinFK = bin
+	(UIApplication.shared.delegate as! AppDelegate).saveContext()
+	nameTextField.text = ""
+}
+
+
+Fetching data
+    
+Simple fetch:
+let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
+func loadData() {
+	do {
+		itemArray = try context.fetch(Item.fetchRequest())
+	} catch {
+		print("Fetching Failed")
+	}
+}
+
+Fetch with predicate and sort:
+static func findItems(byBinName:String) -> [Item]	{
+        do {
+            let fetchRequest = NSFetchRequest<Item>(entityName: "Item")
+            fetchRequest.predicate = NSPredicate(format: "itemToBinFK.name == %@", byBinName)
+            let nameSort = NSSortDescriptor(key: "name", ascending: true)
+            fetchRequest.sortDescriptors = [nameSort]
+            return try context.fetch(fetchRequest) 
+        } catch {
+            print("Fetching Items Failed")
+        }
+        return []
+    }
+    
+Use in TableViewController prepareForSegue
+
+override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    switch segue.identifier! {
+    case CellDetailIdentifier:
+        let destination = segue.destinationViewController as! DetailViewController
+        let indexPath = tableView.indexPathForSelectedRow!
+        let selectedObject = fetchedResultsController.objectAtIndexPath(indexPath) as! EmployeeMO
+        destination.employee = selectedObject
+    default:
+        print("Unknown segue: \(segue.identifier)")
+    }
+}
+
+Validation
+
+Validate for insert/update
+		do {
+            try item.validateForInsert()
+            (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        } catch{
+            print("error: \(error.localizedDescription)")
+        }
+        
+
+    func validateAge(value: AutoreleasingUnsafeMutablePointer<AnyObject?>) throws {
+        if value == nil {
+            return
+        }
+        
+        let valueNumber = value?.pointee as! NSNumber
+        if valueNumber.floatValue > 0.0 {
+            return
+        }
+        let errorStr = NSLocalizedString("Age must be greater than zero", tableName: "Employee", comment: "validation: zero age error")
+        let userInfoDict = [NSLocalizedDescriptionKey: errorStr]
+        let error = NSError(domain: "EMPLOYEE_ERROR_DOMAIN", code: 1123, userInfo: userInfoDict)
+        throw error
+    }
+
