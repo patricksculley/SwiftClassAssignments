@@ -1,0 +1,48 @@
+Test targets contain XCTestCases (classes) consisting of individual test methods (tests). 
+Organize your test targets as either Unit Test or UI Test. Create a test class for each app module.
+ 
+Unit Tests vs UI Tests
+Use UI Tests for ViewControllers, use Unit tests for everything else (backend logic)
+Remove any backend logic references to View level items (inverted dependencies) so you can test backend separately.
+(Move persistentContainer, saveContext to CoreDataFetch and obtain viewContext, newBackgroundContext() from there)
+
+Use Enable Testability build flag to allow access to private members and functions in the target project
+And/or set @testable on import statements of any libraries in your XCTestCase classes
+@testable import CoreDataExample
+
+Test Assertions: 
+XCTAssertEqualObjects([calcViewController.displayField stringValue], @"8", @"Part 1 failed.");
+XCTAssertEqual, XCTAssertNotEqual, XCTAssertEqualWithAccuracy
+XCTAssertGreaterThan, XCTAssertLessThan
+XCTAssertNil or XCTAssertNotNil
+XCTAssertNoThrow, XCTAssertThrowsSpecific
+
+XCTestCase Lifecycle:
+func startMeasuring()
+func stopMeasuring()
+func setUp()
+func tearDown()
+var continueAfterFailure: Bool
+
+For asynchronous test cases, do the following:
+1) Create expectation(description:)
+2) Call myExpectation.fulfill() once the expectation has completed
+3) Use waitForExpectations(timeout: 1, handler:(error:Error->Void) to process callback results
+Make sure that any asynchronous methods you want to test include a callback so you can leverage XCTestExpectation
+
+To measure performance of a block of code use: func measure(() -> Void)
+
+Add Test Failure Breakpoint from Breakpoints tab at the bottom to break on test failure for stack tracing
+
+To re-run a failed test Product > Perform Action > Run tests again
+control-option-command-g
+
+To enable Code Coverage details: edit the scheme and check Enable Code Coverage
+
+To inspect code coverage, go to Reports in the Navigator pane and select the Test run to view. Select the Coverage tab
+
+Each block of code that needs coverage is listed. Click the arrow next to the line to go to that block. 
+From that view you can see how many times each block was executed.
+
+
+

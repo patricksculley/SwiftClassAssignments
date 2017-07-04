@@ -1,0 +1,11 @@
+UI Testing
+
+Run tests from the command line for server based testing:
+xcodebuild test -project MyAppProject.xcodeproj -scheme MyApp -destination 'platform=Simulator,name=iPhone,OS=8.1'
+
+Tests can also be created and registered programmatically
+
+UI Tests
+Prep for UI tests by adding accessibility name labels. This will make the automation code easier to read
+Record UI Tests by clicking the record button
+Edit tests to represent different functional flows
