@@ -156,7 +156,8 @@ person = nil
 apartment = nil
 
 Unowned instances are similar to weak references when you need to access a parent entity from a child
-*** what is the difference between weak and unowned **
+*** what is the difference between weak and unowned ***
+var vs let object (self is always a let object so it should be unowned) 
 
 class Customer {
     let name: String

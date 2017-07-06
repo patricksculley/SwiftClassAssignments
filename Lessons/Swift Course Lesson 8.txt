@@ -1,11 +1,60 @@
 UI Testing
+References: https://developer.apple.com/documentation/xctest
+https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/04-writing_tests.html
 
-Run tests from the command line for server based testing:
-xcodebuild test -project MyAppProject.xcodeproj -scheme MyApp -destination 'platform=Simulator,name=iPhone,OS=8.1'
-
-Tests can also be created and registered programmatically
+Make sure tests can be run independently and in no particular order.
+XCode 8 runs tests in a random order regardless of naming or ordering in Test Case class
+So re-run your tests several times to make sure that they can run in any order.
+Create tests that coordinate smaller flows that are re-usable 
 
 UI Tests
-Prep for UI tests by adding accessibility name labels. This will make the automation code easier to read
+Prep for UI tests by adding accessibility name labels. This will make the automation code easier to read.
+Make sure that all elements have an Accessibility label if accessibility is enabled for them. 
+Programmatically add labels like this:                 
+textField.accessibilityLabel = "\(entityType) Name Input"
+or by updating IB Identity Inspector and adding User Defined attribute of accessibilityLabel
+
 Record UI Tests by clicking the record button
 Edit tests to represent different functional flows
+
+For cleaner implementation, write your own tests!
+Cheat sheet from http://masilotti.com/ui-testing-cheat-sheet/:
+https://github.com/joemasilotti/UI-Testing-Cheat-Sheet
+
+Use print(app.debugDescription) to print the View hierarchy
+
+XCTAssert(app.staticTexts["Some value"].exists)
+
+app.buttons["Save"].tap()
+app.navigationBars["Title"].buttons["Search"].tap()
+
+let textField = app.textFields["Team Name"]
+textField.tap()
+textField.typeText("My name")
+
+app.buttons["Finish Game"].tap()
+app.alerts["You won!"].buttons["Awesome!"].tap()
+let textField = app.alerts["You won!"].textField[""].element
+
+app.sliders.element.adjust(toNormalizedSliderPosition: 0.7)
+
+app.pickerWheels.element.adjust(toPickerWheelValue: "6-2 Formation")
+Caveat! value has to change from current value to something else to fire events
+
+XCTAssert(app.tables.cells.containing(.staticText, identifier:"Item: \(itemName)").exists)
+
+Pull to refresh:
+let firstCell = app.tables.cells.element(boundBy: 0)
+let start = firstCell.coordinate(withNormalizedOffset: CGVector(dx:0, dy:0))
+let finish = firstCell.coordinate(withNormalizedOffset: CGVector(dx:0, dy:6))
+start.press(forDuration: 0, thenDragTo: finish)
+            
+Web view:
+app.links["Volleyball"].tap()
+
+func waitForElementToAppear(_ element: XCUIElement) -> Bool {
+	let predicate = NSPredicate(format: "exists == true")
+	let _ = expectation(for: predicate, evaluatedWith: element, handler: nil)
+	waitForExpectations(timeout: 1)
+}
+
