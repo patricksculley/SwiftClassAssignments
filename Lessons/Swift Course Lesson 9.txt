@@ -1,0 +1,43 @@
+1) Recognize patterns and idioms present in the Cocoa Touch API and other Apple
+frameworks.
+
+- Optionals
+- Trailing Closure
+- enum
+- Extensions
+- String
+- _ optional variable name
+- switch, for in, try/catch statement
+- Nested Functions
+- Closures
+- unowned, weak self
+- MVC Separation of Concerns
+- Program to an interface and mocking
+- Handler/Callback
+- Factory (method for returning contexts)
+- Observer (NSFetchedResultsController)
+- Iterator Abstract (subscript notation on a custom object)
+- Builder pattern (return self)
+
+Observer pattern
+NotificationCenter.default.addObserver(
+    self,
+    selector: #selector(self.batteryLevelChanged),
+    name: .UIDeviceBatteryLevelDidChange,
+    object: nil)
+
+Explain and summarize iOS API features including location, mapping, sensors,
+gestures, multimedia and user interface components.
+
+An example of singleton class of swift
+
+class MySingleton {
+    static let mySingleton = MySingleton()
+}
+
+NSUserDefaults - UserPreferencesUtil
+Are user preferences encrypted now in Swift?
+
+IBDesignable
+
+Alamofire, unbox

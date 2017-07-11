@@ -43,6 +43,10 @@ Caveat! value has to change from current value to something else to fire events
 
 XCTAssert(app.tables.cells.containing(.staticText, identifier:"Item: \(itemName)").exists)
 
+Tables and Cells:
+let table = app.tables.element(boundBy: 0)
+XCTAssertEqual(table.cells.count, 10)	
+
 Pull to refresh:
 let firstCell = app.tables.cells.element(boundBy: 0)
 let start = firstCell.coordinate(withNormalizedOffset: CGVector(dx:0, dy:0))
