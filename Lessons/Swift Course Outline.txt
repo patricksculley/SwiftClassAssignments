@@ -49,17 +49,3 @@ First things first: Skype usernames
 Send syllabus via Skype
 Submit assignments by raising a Github pull request
 Walk class through creating a Github pull request
-
-Zohaib Abbasi <zabbasi@nisum.com>, Umer Maqsood <umaqsood@nisum.com>, Khurram Iqbal <kiqbal@nisum.com>, Tabish Umer Farooqui <tumer@nisum.com>, Praveen Kumar Madabathula <pmadabathula@nisum.com>, Harish Kumar Boyina <hboyina@nisum.com>, Salman Kassim <skassim@nisum.com>, Ajas Ahmed <aahmed@nisum.com>, Mallikarjun Kasam <mkasam@nisum.com>, Phanidhar Rao Gudi <pgudi@nisum.com>
-
-Tabish: dev 2009, ios 2010, 25+ live apps on app store using ObjC. Some Swift background, 
-but too much load and haven't finished. Looking forward to being fully functional. C#, .Net
-Umer: PHP developer originally, 5yrs iOS dev now, back in Pakistan. Good opportunity. 
-Just started looking at Swift but not enough time
-Khurram: iOS Developer 2012, 4+ years mobile w/Android, backend Java, ReactJS, 
-Swift since 2015 and already live w/ a couple of projects.
-Zohaib: 8 years dev experience, 4 yrs in Objective C, using some Swift libraries in projects.
-PHP, VB .Net, C#, JavaScript, Objective C. Writing some Swift.
-Praveen: 6 yrs Objective C, iOS only. Some .Net, C#. Not much but a little bit Swift. Recently joined Nisum
-Harish: iOS since 2011, some products in app store, using Swift 2.
-Usman: 1.5 years experience with Swift, Objective-C 2.5 yrs, some Java

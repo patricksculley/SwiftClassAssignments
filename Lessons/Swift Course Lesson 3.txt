@@ -40,7 +40,7 @@ TableViewController
 CollectionView
 StackView, MapView
 weakself in closures
-flux with ios?
+flux with ios? probably not this time
 @IBDesignable
 Focus on UI
 
